@@ -1,7 +1,7 @@
 /_site/
 /.quarto/
+/site_libs/
 __pycache__/
 *.pyc
 .DS_Store
-
 **/*.quarto_ipynb

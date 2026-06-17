@@ -18,8 +18,8 @@ website:
     machine learning, put it through structured AI peer review, and report it
     honestly. Run on six papers spanning PLR, IRM + generic ML, PLIV, and
     difference-in-differences.
-  site-url: "https://qgallea.github.io/recast_v2"
-  repo-url: "https://github.com/qgallea/recast_v2"
+  site-url: "https://qgallea.github.io/recast-showcase"
+  repo-url: "https://github.com/qgallea/recast-showcase"
   announcement:
     dismissable: false
     type: warning
@@ -39,7 +39,7 @@ website:
       - { text: "About", href: about.qmd }
     right:
       - icon: github
-        href: "https://github.com/qgallea/recast_v2"
+        href: "https://github.com/qgallea/recast-showcase"
         aria-label: "GitHub repository"
   page-footer:
     border: true
