@@ -1,0 +1,141 @@
+---
+pagetitle: "RECAST — Replicate, extend with causal ML, AI-referee, report honestly"
+page-layout: full
+toc: false
+---
+
+::: {.hero-banner}
+## Replicate a result. Extend it with causal ML. Referee it. Report it honestly.
+
+RECAST takes a published econometrics paper and its replication data, reproduces
+the original result, extends it with Double/Debiased Machine Learning and generic
+ML for heterogeneity, runs the extension through a structured AI peer review, and
+writes an honest report — with the same code path every time.
+
+::: {.hero-buttons}
+[How it works](methodology.qmd){.btn .btn-primary .btn-lg}
+[See the papers](papers.qmd){.btn .btn-outline-primary .btn-lg}
+:::
+:::
+
+::: {.define-block}
+**RECAST** *(verb)* — to take an econometrics paper's headline result, **re-cast**
+it through a flexible, machine-learning control function: keep the original
+identification, relax the functional form, quantify any heterogeneity, and let an
+adversarial AI referee decide whether the new estimate can be trusted.
+:::
+
+## How it works
+
+RECAST is a four-step pipeline. Each step is a separate agent that communicates
+only through files, so every number on this site is traceable to an artifact.
+
+::: {.pipeline-steps}
+::: {.step}
+[]{.step-n}1
+### Replicate
+Reproduce the original OLS/IV result *coefficient by coefficient*, at the paper's
+own standard-error convention. A two-regime test grades each headline coefficient
+**success / partial / failure** — and a failed replication halts the pipeline
+before any ML runs.
+:::
+::: {.step}
+[]{.step-n}2
+### Extend
+Swap the parametric first stage for cross-fitted machine learning (DoubleML:
+PLR / IRM / PLIV), keeping the paper's *inherited* conditioning set. Seven
+learners, median aggregation, B&N-adjusted SEs; generic ML (BLP / GATES / CLAN)
+for heterogeneity when the treatment is binary.
+:::
+::: {.step}
+[]{.step-n}3
+### Review
+Two isolated AI referees — a general referee (identification + replication
+integrity) and a strict DML-technical referee (a 19-point canonical audit, sole
+authority to *block*) — review the extension, not the original paper. A synthesis
+referee quality-controls them.
+:::
+::: {.step}
+[]{.step-n}4
+### Report
+A gap table (original | ours | benchmark | difference), an estimand statement, and
+a plain-English verdict that says what the machine learning did **and did not**
+add. The benchmark is hidden from the estimator until the results are frozen.
+:::
+:::
+
+[Read the methodology in depth →](methodology.qmd)
+
+## Does it work? The evidence
+
+RECAST has been run end-to-end on six published papers spanning four
+identification strategies — including two difference-in-differences designs. The
+results are the point of the site — including the ones that didn't come out clean.
+
+::: {.features-grid}
+::: {.feature}
+**Reproduces hand-built work, bit-for-bit**
+<p>On Nunn &amp; Trefler (2010), the automated pipeline matched a hand-built
+replication on all 21 DML cells with zero numerical drift, and matched the
+Baiardi–Naghi benchmark 21/21.</p>
+:::
+::: {.feature}
+**Reports honest divergence**
+<p>On a teacher-training RCT, the null average effect and the heterogeneity
+*shape* reproduced — but the headline heterogeneity slope diverged from the
+benchmark (0.20 vs 0.65). RECAST flags it as implementation sensitivity, not a win.</p>
+:::
+::: {.feature}
+**Knows its limits**
+<p>On Ashraf &amp; Galor (2013), the quadratic IV *hump* replicated exactly
+(optimal point 0.690) — but a linear PLIV can't represent a hump, so the extension
+is labeled functional-form-limited rather than passed off as the effect.</p>
+:::
+::: {.feature}
+**Enforces control discipline**
+<p>On Djankov et al. (2010), a screen flagged 6 of 12 "kitchen-sink" controls as
+plausible bad controls; the inherited set stays the headline and the resulting
+sensitivity is disclosed (−0.200 → −0.230).</p>
+:::
+::: {.feature}
+**Catches its own bugs**
+<p>The test battery surfaced and fixed real framework bugs — and a deliberate
+fault-injection halts on a bad replication instead of fabricating a result.</p>
+:::
+::: {.feature}
+**Extends to difference-in-differences**
+<p>On a continuous-treatment DiD (FinTech adoption after the Wells-Fargo scandal)
+the router picks PLR on the two-way-FE panel and the effect survives DML; on a
+staggered binary DiD (faith-based initiatives) it correctly tries
+<code>DoubleMLDIDMulti</code> and falls back gracefully when 50 states prove too
+few — and labels the fallback honestly.</p>
+:::
+:::
+
+## The papers at a glance
+
+| Paper | Identification | Verdict | Headline |
+|---|---|---|---|
+| [Nunn & Trefler (2010)](papers/nunn_trefler_2010/) | PLR / OLS | Ready | DML ≈ halves the OLS effect; bit-for-bit regression test |
+| [Loyalka et al. (2019)](papers/teacher_training_2019/) | IRM + generic ML | Ready | ATE null reproduces; β₂ heterogeneity diverges (honest) |
+| [Ashraf & Galor (2013)](papers/ashraf_galor_2013/) | PLIV (IV) | Ready | Quadratic hump replicates exactly; PLIV functional-form-limited |
+| [Djankov et al. (2010)](papers/djankov_taxes_2010/) | PLR / OLS | Ready | 3/3 exact OLS; control-discipline sensitivity disclosed |
+| [Trust / FinTech (2025)](papers/trust_fintech_2025/) | DiD → DID_PLR | Extension demo | Continuous-intensity DiD replicates (0.019) and survives DML (0.020–0.022) |
+| [Divine Policy (2025)](papers/divine_policy_2025/) | Staggered DiD | Extension demo | CS estimator infeasible at 50 states → graceful, flagged DID_PLR fallback |
+
+[Browse all papers →](papers.qmd)
+
+RECAST also continuously **scouts** newly published papers with available replication
+packages (from the [AEA Replication Tracker](https://paulgp.com/replication-package-db/))
+and logs which ones it could process — see [candidate scouting](candidates.qmd).
+
+## We only claim what we tested
+
+RECAST's estimand router covers more designs than have been exercised. The
+[coverage page](methodology/coverage.qmd) states plainly which method paths are
+validated (PLR, IRM + generic ML, PLIV, difference-in-differences, the failure
+gate, control discipline) and which are **not yet tested** (binary-IV → LATE,
+multivalued → APOS, large-N staggered DiD). Faithfulness on the tested paths is
+not a claim of generality.
+
+[See method-path coverage →](methodology/coverage.qmd)

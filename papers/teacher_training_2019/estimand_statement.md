@@ -1,0 +1,7 @@
+- **Model:** IRM (ATE); routing rule: 2.1-1 RCT binary -> IRM; generic ML admissible (known propensity)
+- **Estimand:** effect of a one-unit change in `in_person_sch` on `z_endline`, holding a flexible, unknown function of the INHERITED conditioning set fixed (30 controls, variable-for-variable from the documented specification (original code not on disk) including 6 one-hot fixed-effect levels for ['blockZ']; control-discipline rule, spec 2.3).
+- **Population:** analysis sample n=10006; clustered: schid.
+- **Identifying assumptions (inherited):** unconfoundedness holds by randomization (stratified). DML relaxes only the functional form, never the identification.
+- **Added assumptions:** none.
+- **Interpretation under heterogeneity:** The IRM ATE averages over the (trimmed) covariate distribution; with score=ATTE it is the effect on the treated.
+- **Heterogeneity branch:** generic_ml -- benchmarkable.

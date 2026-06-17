@@ -1,0 +1,65 @@
+project:
+  type: website
+  output-dir: _site
+  # Render only the .qmd pages. The referee/estimand .md files are {{< include >}}
+  # fragments (not standalone pages) and the walkthrough notebook is a download,
+  # not a page — both are excluded here and the notebook is copied via resources.
+  render:
+    - "*.qmd"
+    - "methodology/*.qmd"
+    - "papers/*/index.qmd"
+  resources:
+    - "downloads/recast_phase1_nunn_trefler.ipynb"
+
+website:
+  title: "RECAST"
+  description: >-
+    RECAST — replicate a published econometrics result, extend it with causal
+    machine learning, put it through structured AI peer review, and report it
+    honestly. Run on six papers spanning PLR, IRM + generic ML, PLIV, and
+    difference-in-differences.
+  site-url: "https://qgallea.github.io/recast_v2"
+  repo-url: "https://github.com/qgallea/recast_v2"
+  announcement:
+    dismissable: false
+    type: warning
+    position: below-navbar
+    content: >-
+      🚧 **Under construction & testing** — this site and methodology are in active
+      development. Results have **not been independently verified**. Do not cite or
+      rely on any output without manual review.
+  navbar:
+    title: "RECAST"
+    left:
+      - { text: "Home", href: index.qmd }
+      - { text: "How it works", href: methodology.qmd }
+      - { text: "Papers", href: papers.qmd }
+      - { text: "Scout", href: candidates.qmd }
+      - { text: "Coverage", href: methodology/coverage.qmd }
+      - { text: "About", href: about.qmd }
+    right:
+      - icon: github
+        href: "https://github.com/qgallea/recast_v2"
+        aria-label: "GitHub repository"
+  page-footer:
+    border: true
+    left: >-
+      **RECAST** — Replication and Extension with Causal AI Statistical Toolkit.
+      By [Quentin Gallea, Ph.D.](https://thecausalmindset.com) · built with
+      [Claude Code](https://claude.com/claude-code) and
+      [Quarto](https://quarto.org).
+    right: "Run on 6 papers · PLR · IRM + generic ML · PLIV · DiD"
+
+format:
+  html:
+    theme: [cosmo, theme/custom.scss]
+    toc: true
+    toc-depth: 3
+    code-copy: true
+    link-external-newwindow: true
+    link-external-icon: true
+    grid:
+      body-width: 900px
+
+execute:
+  freeze: auto

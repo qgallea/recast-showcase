@@ -1,0 +1,79 @@
+---
+title: "Candidate scouting"
+description: "Recent papers with available replication packages, screened for whether RECAST can handle their identification design."
+toc: true
+---
+
+RECAST continuously scouts recently published economics papers that it *could* process. It reads the [AEA Replication Tracker](https://paulgp.com/replication-package-db/) (P. Goldsmith-Pinkham) to find papers whose **replication package is available**, enriches each with its abstract, and classifies the identification design to decide whether it falls in a method path RECAST supports. Every paper looked at is recorded below — accepted *and* rejected — so the coverage is auditable.
+
+::: {.callout-note}
+## How to read this
+This is an **abstract-only screen**, not a verdict. The design is inferred from the title and abstract, so each row carries a confidence and the authoritative routing only happens at real intake. "Suitable" means the design maps to a supported RECAST estimand ([see Coverage](methodology/coverage.qmd)); it does **not** mean the paper has been replicated. The pipeline outcome column tracks papers that have actually been run.
+:::
+
+## How scouting works
+
+1. **Pull the index** — read the AEA Replication Tracker's data-availability lookup (DOI → package status).
+2. **Filter** to papers whose replication package is `full_data` or `partial_data`.
+3. **Enrich** each DOI with title + abstract via OpenAlex (Semantic Scholar fallback for missing abstracts).
+4. **Classify the design** (RCT / selection-on-observables / IV / panel-DiD / other) and treatment type from the abstract, and route it through the *same* estimand router the pipeline uses.
+5. **Record every paper** — accept or reject, with a reason and a confidence — in an append-only ledger (this page is generated from that ledger).
+6. **Human gate** — a suitable paper is only *suggested*; running the full replicate → extend → review pipeline is a separate, explicit step that writes the result back to the **pipeline** column below.
+
+## At a glance
+
+::: {.glance}
+<div class="g"><span class="k">Papers crawled</span><span class="v">276</span></div>
+<div class="g"><span class="k">Screened</span><span class="v">26</span></div>
+<div class="g"><span class="k">Suitable</span><span class="v">15</span></div>
+<div class="g"><span class="k">Awaiting screen</span><span class="v">250</span></div>
+<div class="g"><span class="k">Years scouted</span><span class="v">2025</span></div>
+<div class="g"><span class="k">Last crawl</span><span class="v">2026-06-17T14:07:54+00:00</span></div>
+:::
+
+## Suitable candidates
+
+Papers whose design maps to a supported RECAST path. *Provisional model* is the estimand RECAST would route to; *decision* is the human accept/reject; *pipeline* is the actual replication/extension outcome once run.
+
+| Model | Paper | Journal | Year | Data | Conf. | Decision | Pipeline |
+|---|---|---|---|---|---|---|---|
+| IRM | [The Negligible Effect of Free Contraception on Fertility: Experimental Evidence from Burkina Faso](https://doi.org/10.1257/aer.20241305) | American Economic Review | 2025 | full_data | 0.90 | pending | not_started |
+| IRM | [Childcare, Labor Supply, and Business Development: Experimental Evidence from Uganda](https://doi.org/10.1257/app.20230227) | American Economic Journal Applied Economics | 2025 | partial_data | 0.90 | pending | not_started |
+| DID | [Divine Policy: The Impact of Religion in Government](https://doi.org/10.1257/app.20240018) | American Economic Journal Applied Economics | 2025 | partial_data | 0.90 | accepted | extended |
+| DID_PLR | [Local Labor Market Effects of the 2002 Bush Steel Tariffs](https://doi.org/10.1257/pol.20220472) | American Economic Journal Economic Policy | 2025 | full_data | 0.90 | accepted | not_started |
+| DID | [Trust as an entry barrier: Evidence from FinTech adoption](https://doi.org/10.1016/j.jfineco.2025.104062) | Journal of Financial Economics | 2025 | partial_data | 0.90 | accepted | extended |
+| DID | [Undergraduate Gender Diversity and the Direction of Scientific Research](https://doi.org/10.1257/aer.20221561) | American Economic Review | 2025 | partial_data | 0.85 | pending | not_started |
+| IRM | [Surviving Bad News: Health Information without Treatment Options](https://doi.org/10.1257/aeri.20240058) | American Economic Review Insights | 2025 | full_data | 0.85 | pending | not_started |
+| DID_PLR | [Profit Taxation, R&amp;D Spending, and Innovation](https://doi.org/10.1257/pol.20220580) | American Economic Journal Economic Policy | 2025 | partial_data | 0.85 | pending | not_started |
+| IRM | [Should College be “Free”? Evidence on Free College, Early Commitment, and Merit Aid from an Eight-Year Randomized Trial](https://doi.org/10.1257/pol.20230100) | American Economic Journal Economic Policy | 2025 | partial_data | 0.85 | pending | not_started |
+| DID | [Voice at Work](https://doi.org/10.1257/app.20220451) | American Economic Journal Applied Economics | 2025 | partial_data | 0.75 | pending | not_started |
+| DID | [Bank Risk-Taking, Credit Allocation, and Monetary Policy Transmission: Evidence from China](https://doi.org/10.1257/mac.20220177) | American Economic Journal Macroeconomics | 2025 | partial_data | 0.70 | pending | not_started |
+| DID_PLR | [The Impact of Provider Payments on Health Care Utilization of Low-Income Individuals: Evidence from Medicare and Medicaid](https://doi.org/10.1257/pol.20220775) | American Economic Journal Economic Policy | 2025 | partial_data | 0.70 | pending | not_started |
+| DID | [Clean Identification? The Effects of the Clean Air Act on Air Pollution, Exposure Disparities, and House Prices](https://doi.org/10.1257/pol.20220745) | American Economic Journal Economic Policy | 2025 | full_data | 0.65 | pending | not_started |
+| DID_PLR | [Robots and firm investment](https://doi.org/10.1016/j.jfineco.2025.104183) | Journal of Financial Economics | 2025 | partial_data | 0.50 | pending | not_started |
+| PLIV | [The impact of bank financing on municipalities’ bond issuance and the real economy](https://doi.org/10.1016/j.jfineco.2025.104022) | Journal of Financial Economics | 2025 | partial_data | 0.45 | pending | not_started |
+
+## Screened — out of scope
+
+Papers looked at whose design RECAST does not currently handle (or whose abstract was unavailable to screen). Recorded for transparency.
+
+| Paper | Journal | Year | Why not |
+|---|---|---|---|
+| [Welfare Analysis of Changing Notches: Evidence from Bolsa Família](https://doi.org/10.1257/pol.20230024) | American Economic Journal Economic Policy | 2025 | design 'other' is out of RECAST scope (e.g. RD, synthetic control, structural/estimated model, asset-pricing, pure theory) |
+| [Global Business Networks](https://doi.org/10.1016/j.jfineco.2025.104007) | Journal of Financial Economics | 2025 | design 'other' is out of RECAST scope (e.g. RD, synthetic control, structural/estimated model, asset-pricing, pure theory) |
+| [The retail execution quality landscape](https://doi.org/10.1016/j.jfineco.2025.104051) | Journal of Financial Economics | 2025 | design 'other' is out of RECAST scope (e.g. RD, synthetic control, structural/estimated model, asset-pricing, pure theory) |
+| [Surviving the fintech disruption](https://doi.org/10.1016/j.jfineco.2025.104071) | Journal of Financial Economics | 2025 | no abstract available from OpenAlex/Semantic Scholar — could not screen |
+| [Expected idiosyncratic volatility](https://doi.org/10.1016/j.jfineco.2025.104023) | Journal of Financial Economics | 2025 | no abstract available from OpenAlex/Semantic Scholar — could not screen |
+| [Back to the 1980s or not? The drivers of inflation and real risks in Treasury bonds](https://doi.org/10.1016/j.jfineco.2025.104027) | Journal of Financial Economics | 2025 | no abstract available from OpenAlex/Semantic Scholar — could not screen |
+| [Strategic digitization in currency and payment competition](https://doi.org/10.1016/j.jfineco.2025.104055) | Journal of Financial Economics | 2025 | no abstract available from OpenAlex/Semantic Scholar — could not screen |
+| [Do bank CEOs learn from banking crises?](https://doi.org/10.1016/j.jfineco.2025.104009) | Journal of Financial Economics | 2025 | no abstract available from OpenAlex/Semantic Scholar — could not screen |
+| [Innovation and capital](https://doi.org/10.1016/j.jfineco.2025.104029) | Journal of Financial Economics | 2025 | no abstract available from OpenAlex/Semantic Scholar — could not screen |
+| [Asymmetric information, disagreement, and the valuation of debt and equity](https://doi.org/10.1016/j.jfineco.2025.103995) | Journal of Financial Economics | 2025 | no abstract available from OpenAlex/Semantic Scholar — could not screen |
+| [Fed information effects: Evidence from the equity term structure](https://doi.org/10.1016/j.jfineco.2024.103988) | Journal of Financial Economics | 2025 | no abstract available from OpenAlex/Semantic Scholar — could not screen |
+
+[**250** more data-available papers have been harvested and are queued for screening (2025: 250).]{.text-muted-sm}
+
+
+---
+
+[Replication-availability data: the AEA Replication Tracker (paulgp/replication-package-db). Paper metadata + abstracts: OpenAlex / Semantic Scholar. Designs are screened from abstracts only — see the [methodology](methodology/coverage.qmd).]{.text-muted-sm}

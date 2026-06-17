@@ -1,0 +1,36 @@
+---
+title: "About RECAST"
+description: "What RECAST is, who built it, and how to read this site."
+---
+
+**RECAST** — *Replication and Extension with Causal AI Statistical Toolkit* — is an
+autonomous, multi-agent pipeline that takes a published econometrics paper and its
+replication data and produces: a faithful replication of the original result, a
+causal-machine-learning extension (Double/Debiased ML and generic ML for
+heterogeneity), a structured AI peer review of that extension, and an honest report.
+
+The aim is not to "beat" original papers with machine learning. It is to ask a
+narrower, more useful question: **once you relax the functional form of the controls
+with cross-fitted ML — while keeping the paper's own identification — does the
+headline result survive, strengthen, weaken, or fall apart?** And to answer it with
+an audit trail and an adversarial review that flags its own limits.
+
+## How to read this site
+
+- [**How it works**](methodology.qmd) — the four-step pipeline and the two-referee
+  review.
+- [**Papers**](papers.qmd) — four published results put through the full pipeline,
+  each with its gap table, figures, referee reports, and an honest verdict.
+- [**Coverage**](methodology/coverage.qmd) — which identification strategies have
+  actually been tested, and which have not.
+
+Every figure and table on the paper pages is generated from committed artifacts
+(result JSONs, referee reports, frozen estimates), so the numbers are traceable.
+
+## Credits
+
+Built by [Quentin Gallea, Ph.D.](https://thecausalmindset.com) with
+[Claude Code](https://claude.com/claude-code), rendered with
+[Quarto](https://quarto.org). The methodology builds on Baiardi & Naghi (2024),
+Chernozhukov et al. (2018), Chernozhukov, Demirer, Duflo & Fernández-Val (2018),
+and the refereeing principles of Berk, Harvey & Hirshleifer (2017).

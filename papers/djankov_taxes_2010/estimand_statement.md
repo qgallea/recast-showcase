@@ -1,0 +1,7 @@
+- **Model:** PLR (partialling out); routing rule: 2.1-4 sel-on-obs continuous -> PLR; gate/cate EXPLORATORY; GATES not applicable
+- **Estimand:** effect of a one-unit change in `effective_5yr` on `Investment2005`, holding a flexible, unknown function of the INHERITED conditioning set fixed (12 controls, variable-for-variable from the original code; control-discipline rule, spec 2.3).
+- **Population:** analysis sample n=85.
+- **Identifying assumptions (inherited):** conditional exogeneity of the treatment given the inherited controls -- the original paper's selection-on-observables claim (the original authors themselves frame this as a robust correlation, not causal). DML relaxes only the functional form, never the identification.
+- **Added assumptions:** none.
+- **Interpretation under heterogeneity:** Under treatment-effect heterogeneity the PLR coefficient is a conditional-variance-weighted average of derivative (local slope) effects, NOT an average dose-response.
+- **Heterogeneity branch:** plr_gate_cate -- EXPLORATORY (no benchmark exists for these quantities).

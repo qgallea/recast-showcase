@@ -1,0 +1,48 @@
+---
+title: "Method-path coverage"
+description: "An honest account of which identification paths RECAST has actually been run on — and which it has not."
+---
+
+RECAST's estimand router has branches for more designs than have been exercised
+end-to-end. This page states plainly what is validated and what is not, so the
+"validated" framing elsewhere on the site is never read as a claim of full
+coverage.
+
+## What has been exercised
+
+| Method path | Status | Evidence |
+|---|---|---|
+| PLR / OLS, continuous treatment | ✅ Exercised | [Nunn & Trefler](../papers/nunn_trefler_2010/) (bit-for-bit regression test), [Djankov](../papers/djankov_taxes_2010/) (benchmarked + control discipline) |
+| IRM + generic ML, binary RCT | ✅ Exercised | [Teacher training](../papers/teacher_training_2019/) |
+| IV / PLIV, continuous treatment | ✅ Exercised | [Ashraf & Galor](../papers/ashraf_galor_2013/) — replication exact; extension functional-form-limited (and labeled so) |
+| Replication-failure stop-path | ✅ Exercised | fault-injection test (halts before the extension; no fabrication) |
+| Control discipline / suspect controls | ✅ Exercised | [Djankov](../papers/djankov_taxes_2010/) — 6 of 12 controls flagged |
+| Continuous-treatment DiD → PLR on two-way-FE panel (`DID_PLR`) | ✅ Exercised | [Trust / FinTech](../papers/trust_fintech_2025/) — effect replicates (TWFE 0.019) and survives DML (0.020–0.022) |
+| Staggered binary DiD → `DoubleMLDIDMulti` | ⚠️ Exercised (with caveat) | [Divine Policy](../papers/divine_policy_2025/) — the CS estimator is infeasible at 50 states; the pipeline falls back to `DID_PLR` and says so |
+
+## What has *not* been tested
+
+| Method path | Status | Note |
+|---|---|---|
+| Binary IV → IIVM / LATE | ❌ Not yet tested | The router branch exists; no test case has run it. |
+| Multivalued treatment → APOS | ❌ Not yet tested | Branch exists; unexercised. |
+| Staggered binary DiD on a *large* panel | ❌ Not yet tested | `DoubleMLDIDMulti` ran only on synthetic data + the small-N Divine fallback; an N-large staggered paper would exercise it natively. |
+
+## Faithfulness is not generality
+
+A regression test proves the automation is **faithful** — on Nunn & Trefler it
+reproduced a hand-built analysis bit-for-bit. It cannot prove the automation is
+**general**: that one paper has no fixed effects, runs a penalized learner, uses
+PLR (not IRM or PLIV), and uses `gate()`/`cate()` (not generic ML), so it cannot
+trigger the bugs that live on the other paths. Every additional paper on a new path
+has surfaced real framework issues that were then fixed — which is exactly why the
+honest reading of the table above is "these five behaviors are validated," not
+"RECAST handles everything."
+
+## Scouting new candidates
+
+Beyond these fixed examples, RECAST continuously **scouts** newly published papers
+that have an available replication package and screens whether each one's
+identification design falls on a path it supports. Every paper looked at — accepted
+*and* rejected — is logged on the [Candidate scouting](../candidates.qmd) page, so the
+pipeline of what might be RECASTed next is auditable rather than cherry-picked.

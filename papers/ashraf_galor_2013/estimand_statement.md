@@ -1,0 +1,6 @@
+- **Model:** PLIV (partialling out); rule: 2.1-7 IV continuous -> PLIV
+- **Replication estimand:** the QUADRATIC (hump-shaped) IV effect of genetic diversity on log population density 1500 CE; coefficients on `adiv` (+) and `adiv_sqr` (-), optimal-diversity turning point 0.690.
+- **Extension estimand (LIMITED):** single-treatment linear PLIV recovers only a LINEARIZED average IV slope of `adiv`, instrumented by `mdist_addis`. **It cannot represent the hump, the curvature, or the turning point.**
+- **Functional-form warning (router):** original treatment enters NONLINEARLY (functional_form=quadratic); single-treatment linear PLIV cannot represent it. The DML extension is a LINEARIZED exploratory IV slope only — it does NOT recover the original curvature/turning point. Reproduce the nonlinear structure in the replication stage; treat the PLIV number as a functional-form-limited robustness check, not a replacement estimand.
+- **Identifying assumptions:** instrument relevance + exclusion (migratory distance from East Africa affects development only through diversity), inherited from the original; PLIV adds linearity in D.
+- **Sample:** n=21 (tiny — DML cross-fitting asymptotics are unreliable; reported as an exploratory robustness check, not a headline estimate).

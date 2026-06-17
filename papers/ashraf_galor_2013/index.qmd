@@ -1,0 +1,116 @@
+---
+title: "The Out of Africa Hypothesis, Human Genetic Diversity, and Comparative Economic Development"
+author: "Ashraf, Quamrul, Galor, Oded"
+date: "2013"
+date-format: "YYYY"
+description: "quadratic IV of genetic diversity on long-run development"
+categories:
+  - "PLIV (IV)"
+  - "Deep roots & Growth"
+  - "2013"
+  - "Ready"
+image: forest_plot.png
+paper-journal: "American Economic Review"
+paper-doi: ""
+recast-path: "PLIV (IV)"
+replication-regime: "deterministic"
+---
+
+## Summary
+
+**Citation:** Ashraf, Quamrul, Galor, Oded (2013). *The Out of Africa Hypothesis, Human Genetic Diversity, and Comparative Economic Development*. *American Economic Review*.
+
+The quadratic IV hump replicates exactly (optimal-diversity turning point 0.690); a linear PLIV cannot represent a hump, so the extension is labeled functional-form-limited rather than passed off as the effect.
+
+::: {.glance}
+<div class="g"><span class="k">Method path</span><span class="v">PLIV (IV)</span></div>
+<div class="g"><span class="k">Replication</span><span class="v">deterministic</span></div>
+<div class="g"><span class="k">Review verdict</span><span class="v">Ready</span></div>
+<div class="g"><span class="k">Identification</span><span class="v">IV</span></div>
+:::
+
+## Estimand & identification
+
+{{< include estimand_statement.md >}}
+
+## Replication
+
+**Regime:** deterministic · **Gate:** PASS · **Overall tier:** PARTIAL
+
+| Coefficient | Published | Replicated | n | Tier |
+|---|---|---|---|---|
+| Table 2 col 5 | 285.19 (88.064 se) | 285.1899 (88.063) | 21 | PARTIAL |
+| Table 2 col 5 | -206.576 (66.852 se) | -206.5759 (66.852) | 21 | SUCCESS |
+
+## The gap table
+
+Original result, our replication/extension, the published benchmark (where one exists), and the verdict. The estimator never saw the benchmark — it is compared only after the results were frozen.
+
+
+**IV replication (quadratic 2SLS)**
+
+| Estimator | Original | Ours | Benchmark | Verdict |
+|---|---|---|---|---|
+| adiv | 285.19 (SE 88.064) | 285.19 (SE 88.063) | n/a (no revisit paper; compare to original) | PARTIAL |
+| adiv_sqr | -206.576 (SE 66.852) | -206.576 (SE 66.852) | n/a (no revisit paper; compare to original) | SUCCESS |
+
+**IV replication**
+
+| Estimator | Original | Ours | Benchmark | Verdict |
+|---|---|---|---|---|
+| turning point (optimal diversity) | 0.69 | 0.69 | n/a | exact |
+
+**DML extension (LINEARIZED PLIV)**
+
+| Estimator | Original | Ours | Benchmark | Verdict |
+|---|---|---|---|---|
+| PLIV-Forest | NOT COMPARABLE (hump, not a linear slope) | 7.387 (se 6.188, p=0.233) | none | functional-form-limited (linear PLIV cannot represent the hump) |
+| PLIV-Lasso | NOT COMPARABLE (hump, not a linear slope) | 9.175 (se 4.394, p=0.037) | none | functional-form-limited (linear PLIV cannot represent the hump) |
+
+::: {.callout-warning}
+## Functional-form limitation
+original treatment enters NONLINEARLY (functional_form=quadratic); single-treatment linear PLIV cannot represent it. The DML extension is a LINEARIZED exploratory IV slope only — it does NOT recover the original curvature/turning point. Reproduce the nonlinear structure in the replication stage; treat the PLIV number as a functional-form-limited robustness check, not a replacement estimand.
+:::
+
+
+::: {.callout-warning}
+## Note
+No revisit-paper benchmark. Replication compares to the original published quadratic 2SLS (Table 2 col 5). The DML extension is a linearized exploratory IV slope and is NOT comparable to the hump coefficients.
+:::
+
+
+## Causal-ML extension
+
+![The hump-shaped IV effect (quadratic 2SLS); the linear-PLIV slope is a separate, non-comparable quantity.](forest_plot.png)
+
+Per-learner numbers are in the gap table above. 
+The displayed learners are Forest and Lasso; both are the linearized PLIV, reported as exploratory.
+
+## What causal ML added
+
+The replication is essentially perfect: the hump-shaped 2SLS coefficients reproduce and the implied optimal diversity (0.690) matches the published value exactly, even with a generated instrument and only 21 countries. The extension is where honesty matters: the estimand router sends IV to a linear PLIV, but a single linear slope cannot represent a hump — so RECAST runs the PLIV, labels it a *linearized exploratory* quantity that is not comparable to the quadratic coefficients, and declines to present it as 'the effect of diversity.' The pipeline recognizing the boundary of its own tool is the point.
+
+## AI peer review
+
+The extension was reviewed over **1 round** by two isolated referees (general + DML-technical) with a synthesis quality-control step. The reports are embedded verbatim.
+
+::: {.panel-tabset}
+
+## Round 1 · General
+
+{{< include reports/r1_refG.md >}}
+
+## Round 1 · Synthesis
+
+{{< include reports/r1_synthesis.md >}}
+
+## Final report
+
+{{< include reports/final_report.md >}}
+
+:::
+
+## Downloads & reproducibility
+
+- Note: executed via a bespoke `run_ag.py` script (the generated-instrument IV needed per-paper code), so there is no pipeline notebook for this paper; it also went through a single referee round.
+- Full result artifacts (gap table, frozen estimates, referee reports) live in the project's `data/results/` and `paper/review_history/`.

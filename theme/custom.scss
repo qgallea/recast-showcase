@@ -1,0 +1,114 @@
+/*-- scss:defaults --*/
+$primary: #2c5f8a;          // restrained academic blue
+$body-color: #212529;
+$link-color: #2c5f8a;
+$font-size-root: 16px;
+
+/*-- scss:rules --*/
+
+body { overflow-x: hidden; }
+html { overflow-x: hidden; }
+
+.quarto-title h1.title { font-size: 2rem; }
+
+/* narrower measure on article pages for readability */
+.page-columns .column-body,
+.page-layout-article .column-body { max-width: 840px; }
+
+.navbar { border-bottom: 1px solid #dee2e6; }
+
+/* ── Hero ─────────────────────────────────────────────────────────── */
+.hero-banner {
+  background: linear-gradient(135deg, #f5f8fb 0%, #e9eef3 100%);
+  border: 1px solid #dde6ee;
+  border-radius: 10px;
+  padding: 3rem 2rem;
+  margin-bottom: 2.5rem;
+  text-align: center;
+}
+.hero-banner h2 { font-size: 2.15rem; font-weight: 650; margin-bottom: 1rem; }
+.hero-banner p {
+  font-size: 1.12rem; color: #495057; max-width: 700px; margin: 0 auto 1.6rem;
+}
+.hero-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+/* ── The verb definition block ────────────────────────────────────── */
+.define-block {
+  font-size: 1.05rem; color: #343a40; background: #f7f9fb;
+  border-left: 3px solid $primary; border-radius: 0 6px 6px 0;
+  padding: 1rem 1.4rem; margin: 1.5rem auto; max-width: 760px;
+}
+
+/* ── Pipeline steps ───────────────────────────────────────────────── */
+.pipeline-steps {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.25rem; margin: 1.5rem 0 2.5rem;
+}
+.step {
+  background: #fff; border: 1px solid #dee2e6; border-radius: 8px;
+  padding: 1.25rem 1.4rem;
+}
+.step .step-n {
+  display: inline-block; font-size: 0.78rem; font-weight: 700; color: #fff;
+  background: $primary; border-radius: 999px; padding: 0.05rem 0.6rem; margin-bottom: 0.5rem;
+}
+.step h3 { font-size: 1.02rem; font-weight: 650; margin: 0.2rem 0 0.4rem; }
+.step p { font-size: 0.9rem; color: #5a6268; margin: 0; }
+
+/* ── Evidence / feature grid ──────────────────────────────────────── */
+.features-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.1rem; margin-top: 1.5rem;
+}
+.feature {
+  background: #f8f9fa; border-left: 3px solid $primary;
+  padding: 1rem 1.2rem; border-radius: 0 6px 6px 0;
+}
+.feature strong { display: block; margin-bottom: 0.3rem; font-weight: 650; }
+.feature p { font-size: 0.9rem; color: #5a6268; margin: 0; }
+
+/* ── Docs grid (methodology hub) ──────────────────────────────────── */
+.docs-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.1rem; margin-top: 1.5rem;
+}
+.doc-card {
+  background: #fff; border: 1px solid #dee2e6; border-radius: 8px;
+  padding: 1.2rem 1.4rem; transition: box-shadow 0.15s ease;
+}
+.doc-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.07); }
+.doc-card h3 { font-size: 1rem; margin-bottom: 0.35rem; }
+.doc-card p { font-size: 0.88rem; color: #6c757d; margin: 0; }
+
+/* ── "RECAST at a glance" callout on paper pages ──────────────────── */
+.glance {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.75rem; background: #f7f9fb; border: 1px solid #dde6ee;
+  border-radius: 8px; padding: 1rem 1.2rem; margin: 1.25rem 0;
+}
+.glance .g { font-size: 0.9rem; }
+.glance .g .k { display: block; font-size: 0.72rem; text-transform: uppercase;
+  letter-spacing: 0.04em; color: #6c757d; }
+.glance .g .v { font-weight: 600; color: #212529; }
+
+/* ── Listing cards (papers gallery) ───────────────────────────────── */
+div.quarto-post { transition: box-shadow 0.15s ease, transform 0.15s ease; }
+div.quarto-post:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.09); transform: translateY(-2px);
+}
+/* verdict pill colour */
+.quarto-category[data-value="Ready"] { background-color: #198754 !important; color: #fff; }
+
+/* ── Referee tabset + tables ──────────────────────────────────────── */
+.panel-tabset .tab-content {
+  background: #f8f9fa; border: 1px solid #dee2e6; border-top: none;
+  border-radius: 0 0 6px 6px; padding: 1.4rem; font-size: 0.94rem;
+}
+.panel-tabset blockquote {
+  border-left: 3px solid #adb5bd; color: #495057; padding-left: 1rem; margin: 1rem 0;
+}
+table { font-size: 0.9rem; }
+table thead th { background: #f4f6f8; border-bottom: 2px solid #dee2e6; }
+table tbody tr:nth-child(even) { background: #fbfbfc; }
+
+.text-muted-sm { font-size: 0.85rem; color: #6c757d; }

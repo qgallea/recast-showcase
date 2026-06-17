@@ -1,0 +1,24 @@
+---
+title: "Walkthrough notebook"
+description: "The hand-built Nunn–Trefler analysis the automated pipeline later reproduced bit-for-bit."
+---
+
+Before the pipeline existed, the whole RECAST method was first done **by hand** on
+Nunn & Trefler (2010): replicate the original OLS result, port the Baiardi–Naghi
+DML extension, build the gap table, and add an exploratory heterogeneity analysis —
+all in one annotated Jupyter notebook. That notebook is the methodology's
+ground truth: when the automated pipeline was later run on the same paper, it
+reproduced this hand-built analysis **bit-for-bit** (all 21 DML cells, zero drift).
+
+::: {.callout-tip}
+## Download the walkthrough
+A self-contained, executed notebook that walks the full
+replicate → extend → gap-table analysis end to end.
+
+[Download the notebook (.ipynb)](../downloads/recast_phase1_nunn_trefler.ipynb){.btn .btn-primary}
+:::
+
+The automated counterpart — same numbers, produced by the pipeline and put through
+the two-referee review — is the [Nunn & Trefler paper
+page](../papers/nunn_trefler_2010/). Comparing the two is the cleanest way to see
+that the automation introduced no methodological drift.

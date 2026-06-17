@@ -1,0 +1,130 @@
+---
+title: "The pipeline"
+description: "Tiered replication, the estimand router, the causal-ML extension, and the blinding rule."
+---
+
+## At a glance
+
+Each box below is an **isolated agent** that communicates only through files. The
+**replication gate** halts the run before any ML if the replication fails; the
+**AI-review loop** iterates up to two rounds, and the DML-technical referee is the
+sole authority to block.
+
+```{mermaid}
+flowchart TD
+    IN([Paper PDF + replication package])
+    S1["Stage 1 · Paper intelligence<br/>read code first → paper_spec.json"]
+    S2["Stage 2 · Data prep<br/>→ dataset.parquet"]
+    S3["Stage 3 · Replication<br/>tiered verdict per coefficient"]
+    GATE{Replication gate}
+    HALT([Halt — no ML, no fabricated numbers])
+    S4["Stage 4 · Causal-ML extension<br/>estimand router · DoubleML · benchmark-blinded"]
+    S5["Stage 5 · Diagnostics"]
+    S6["Stage 6 · Report<br/>gap table + estimand statement"]
+    OUT([Honest report + website page])
+
+    subgraph ROUTER["estimand router — picks ONE, on design × treatment"]
+      direction LR
+      M1[PLR]
+      M2[IRM + generic ML]
+      M3[PLIV / IIVM]
+      M4[DID / DID_PLR]
+    end
+
+    subgraph REVIEW["AI peer review — up to 2 rounds"]
+      RG[General referee]
+      RT["DML-technical referee<br/>19-point audit · sole authority to block"]
+      SY[Synthesis QC]
+      DEC{Blocking issue?}
+      RVA[Revision agent]
+      FIN[Final referee]
+      RG --> SY
+      RT --> SY
+      SY --> DEC
+      DEC -- yes --> RVA
+      RVA -. next round .-> RG
+      RVA -. next round .-> RT
+      DEC -- no --> FIN
+    end
+
+    IN --> S1 --> S2 --> S3 --> GATE
+    GATE -- "FAIL: sign flip / sig change" --> HALT
+    GATE -- "PASS / documented partial" --> S4
+    S4 --> ROUTER --> S5 --> S6
+    S6 --> RG
+    S6 --> RT
+    FIN --> OUT
+
+    class IN,OUT io
+    class S1,S2,S3,S4,S5,S6 ag
+    class M1,M2,M3,M4 mod
+    class RG,RT,SY,DEC,RVA,FIN ref
+    class HALT stop
+    classDef ag fill:#eef3f8,stroke:#2c5f8a,stroke-width:1px,color:#16242f;
+    classDef mod fill:#ffffff,stroke:#2c5f8a,stroke-dasharray:4 2,color:#16242f;
+    classDef ref fill:#f4f6f8,stroke:#6c757d,color:#16242f;
+    classDef io fill:#2c5f8a,stroke:#2c5f8a,color:#ffffff;
+    classDef stop fill:#f8d7da,stroke:#b5462f,color:#7a1f12;
+```
+
+## Step 1 — Replicate (tiered)
+
+RECAST first reproduces the paper's headline result *coefficient by coefficient*,
+at the paper's own standard-error convention (classical, robust, or clustered —
+getting this wrong is a common silent error). Two regimes:
+
+- **Deterministic** — the original code/data are on disk, so each headline
+  coefficient is graded against the printed table:
+  - **Success** — coefficient and t/SE match to printed precision, n exact.
+  - **Partial** — sign and significance preserved, n within tolerance, *and* every
+    numeric gap has a specific documented cause.
+  - **Failure** — a sign flip, a significance-category change, or an unexplained gap.
+- **Stochastic** — no original package is available, so there is no deterministic
+  target; RECAST records a documented *partial* and defers the comparison to the
+  benchmark gap table (this is how the teacher-training paper is handled, honestly).
+
+**The failure gate is enforced in code.** If replication fails, the pipeline
+**stops before any ML runs** — no extension, no fabricated numbers. A deliberate
+fault-injection test (a sign-flipped target) confirms this: stage 4 halts in
+seconds and writes a `failed` status rather than producing an estimate.
+
+## Step 2 — Extend (causal ML)
+
+The estimand is chosen by a **total routing rule** on design × treatment type, not
+a default:
+
+| Design × treatment | Model | Heterogeneity |
+|---|---|---|
+| RCT, binary | IRM (ATE / ATTE) | generic ML (BLP/GATES/CLAN) — *only* here |
+| RCT / selection-on-observables, continuous | PLR | PLR `gate()`/`cate()` (exploratory) |
+| selection-on-observables, binary | IRM + trimming | IRM `gate()`/`cate()` + causal forest |
+| IV, binary Z & D | IIVM (LATE) | — |
+| IV, continuous | PLIV | — |
+| multivalued | APOS / pairwise IRM | — |
+| panel / DiD, continuous intensity | PLR on two-way-FE panel (`DID_PLR`) | event-study aggregation |
+| panel / DiD, binary staggered | `DoubleMLDIDMulti` (→ `DID_PLR` fallback if N is small) | group-time ATTs |
+| anything unmatched | **flag for human** | — |
+
+The conditioning set is **inherited variable-for-variable** from the original — no
+data-driven control selection (that would invite bad-control and bias-amplification
+problems). Learners may shrink a control's contribution; the agent may not drop it.
+Within that fixed set, nuisances are flexible: pairwise interactions for penalized
+learners, raw controls for trees. Seven learners, median aggregation across 100
+sample splits, and the Baiardi–Naghi adjusted standard error.
+
+## Step 3 — The blinding rule
+
+In benchmark mode the extension agent **never sees the benchmark numbers**. The
+orchestrator computes the gap table only *after* `dml_results.json` is written and
+SHA-256-frozen — so "consistency" with a published benchmark can never be the
+result of tuning toward it. Tuning decisions must be justified by out-of-fold
+nuisance RMSE, logged before the gap table exists.
+
+## Step 4 — Report
+
+Each run produces a **gap table** (original | ours | benchmark | difference, with a
+two-layer materiality verdict), an **estimand statement** (estimand, population,
+inherited assumptions, and the correct interpretation under heterogeneity), and a
+plain-English verdict. Everything is append-only and auditable.
+
+[See the two-referee review →](review.qmd) · [What has been tested →](coverage.qmd)

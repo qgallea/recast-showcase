@@ -1,0 +1,29 @@
+---
+title: "RECASTed papers"
+description: "Four published econometrics results, each replicated, extended with causal ML, AI-refereed, and reported honestly."
+listing:
+  id: recast-papers
+  contents: papers/*/index.qmd
+  type: grid
+  grid-columns: 2
+  fields: [image, title, author, date, description, categories]
+  field-display-names:
+    author: "Original authors"
+    date: "Year"
+    description: "Identification"
+  sort: "date desc"
+  filter-ui: [title, categories]
+  sort-ui: [date, title]
+  categories: true
+  image-height: "180px"
+toc: false
+---
+
+Each paper below was put through the full RECAST pipeline — exact (or honestly
+tiered) replication of the original result, a causal-ML extension under the
+*inherited* identification, a two-referee AI review, and a verdict that states
+plainly what the machine learning did and did not add. The category pills mark
+the **method path** (PLR / IRM / PLIV), the topic, and the review verdict.
+
+::: {#recast-papers}
+:::

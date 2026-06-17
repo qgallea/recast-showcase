@@ -1,0 +1,46 @@
+---
+title: "How RECAST works"
+description: "The four-step pipeline, the two-referee review, and an honest account of what has been tested."
+---
+
+RECAST turns a published econometrics result into a replicated, causal-ML-extended,
+AI-refereed report — with one deterministic code path. State lives in the
+filesystem; agents communicate only through files; every number is traceable to an
+artifact. The pipeline is built on three anchors:
+
+- **Baiardi & Naghi (2024)** — the DML/generic-ML extension recipe (7 learners,
+  median aggregation across many sample splits, adjusted standard errors).
+- **Chernozhukov et al. (2018)** — Double/Debiased Machine Learning; and
+  **Chernozhukov, Demirer, Duflo & Fernández-Val (2018)** — generic ML for
+  heterogeneity (BLP / GATES / CLAN).
+- **Berk, Harvey & Hirshleifer (2017)** — the refereeing doctrine (importance
+  first; essential vs. suggestion; scientific arguments, not hunches).
+
+::: {.docs-grid}
+::: {.doc-card}
+### [The pipeline](methodology/pipeline.qmd)
+The four steps in depth: tiered replication and the failure gate, the estimand
+router, the DML/generic-ML extension, and the blinding rule.
+:::
+::: {.doc-card}
+### [The AI peer review](methodology/review.qmd)
+Two isolated referees, a 19-point technical audit with blocking authority, the
+synthesis quality-control step, and the round budget.
+:::
+::: {.doc-card}
+### [Method-path coverage](methodology/coverage.qmd)
+An honest matrix of what has been exercised, what has not, and what is out of
+scope — plus why faithfulness is not generality.
+:::
+::: {.doc-card}
+### [Walkthrough notebook](methodology/walkthrough.qmd)
+The hand-built Nunn–Trefler analysis the automation later reproduced bit-for-bit,
+available to download and run.
+:::
+::: {.doc-card}
+### [Candidate scouting](candidates.qmd)
+How RECAST finds new papers to process: it scans the AEA Replication Tracker for
+available replication packages, screens each by identification design, and logs
+every accept/reject — with the live candidate list.
+:::
+:::

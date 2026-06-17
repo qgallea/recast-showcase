@@ -1,0 +1,51 @@
+---
+title: "The AI peer review"
+description: "Two isolated referees, a 19-point technical audit with blocking authority, and synthesis quality control."
+---
+
+The referees review **RECAST's own extension** — the generated report and the
+executed code — not the original paper, which was already refereed by its journal.
+The doctrine is Berk, Harvey & Hirshleifer (2017): judge importance first;
+separate *essential* issues (the result can't be trusted without the fix, argued
+scientifically) from *suggestions* (non-binding); no hunches, no
+robustness-for-its-own-sake.
+
+## Two isolated referees
+
+Each referee is a separate agent with its own system prompt and access only to the
+files it is allowed to read — neither sees the other's report.
+
+- **General referee** — identification inheritance, replication fidelity, the
+  suspect-controls flag, and whether the claims are proportionate to the evidence.
+  Routes severity through a standard tree (does it invalidate the claim? is it
+  fixable?). Cannot block.
+- **DML-technical referee** — a strict canonical audit (**C1–C19** plus absorbed
+  general-DML checks) of the *executed* code against the Baiardi–Naghi /
+  Chernozhukov standards: interaction bases, repetition count, SE-aggregation
+  formula, generic-ML proxy construction, model-class-vs-treatment routing,
+  clustering, functional-form wording, and more. It is the **only** referee with
+  authority to mark an issue **blocking** — which forces a code re-run — and only
+  when a canonical fix would plausibly change sign, significance, or magnitude by
+  more than 20%.
+
+## Synthesis and the round budget
+
+A **synthesis referee** is the first agent to see both reports. Its job is quality
+control, not aggregation: it deduplicates, downgrades any "essential" raised
+without a scientific argument, enforces proportionality (0–3 essential issues is
+typical), and respects the technical referee's exclusive blocking authority. A
+**revision agent** — the only writer of the report and notebooks — applies the
+fixes. The default budget is **two rounds**, with a third only if essential issues
+remain.
+
+## It catches real bugs
+
+This is not ceremony. On the teacher-training paper, the technical referee issued a
+genuine **blocking** finding: the randomization strata declared in the spec were
+never carried into the covariate sets — a control-discipline violation on the
+headline heterogeneity estimate. It was fixed in the shared library and the stage
+re-ran. (Notably, restoring the strata moved the estimate only slightly, which
+*eliminated* that explanation for the benchmark divergence rather than closing it —
+an honest outcome, reported as such.) Across the test battery, the review loop and
+the build surfaced and fixed several framework bugs that the first paper could not
+have exposed.

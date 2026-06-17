@@ -1,0 +1,5 @@
+- **Design:** continuous-intensity difference-in-differences (panel). Treatment = county Wells-Fargo exposure x post-2016-scandal; outcome = FinTech share of mortgage originations.
+- **Model (router rule 2.1-8b):** `DID_PLR` — PLR on the two-way (county+year) FE-residualized panel (the DML analogue of a TWFE DiD). `DoubleMLDIDMulti` is NOT applicable: the treatment is a continuous intensity, not binary staggered timing.
+- **Estimand:** the FE-adjusted average partial effect of exposure-intensity x post on FinTech share, with county and year effects absorbed and covariates partialled out by ML; SE clustered by county.
+- **Identifying assumptions (inherited):** parallel trends conditional on the controls; no anticipation of the Sept-2016 shock; exposure is as-good-as-assigned conditional on covariates + FE.
+- **Data caveat:** county-level HMDA panel is real; the trust-channel Gallup results are pseudo data and out of replication scope; the published Table-5 coefficient is not in the package (code absent), so replication is a documented PARTIAL on sign + significance.
