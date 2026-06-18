@@ -98,6 +98,11 @@ Original result, our replication/extension, the published benchmark (where one e
 Per-learner numbers are in the gap table above. 
 The displayed BLP learner is the neural-network proxy (the Λ-criterion best, matching the benchmark).
 
+## Heterogeneity (GATE / CATE)
+
+Benchmarkable **generic-ML (CDDF 2018)** sorted-group analysis (BLP / GATES / CLAN) — the standard RCT heterogeneity.
+GATES (groups sorted by predicted effect), best learner *NeuralNet*: G1=-0.053 · G2=+0.033 · G3=+0.039 · G4=+0.043 · G5=+0.044
+
 ## What causal ML added
 
 This is the most informative result on the site because it is not clean. The average effect reproduces the known null, and the rank-dependent heterogeneity structure reproduces (which students/teachers sort to the tails: CLAN 9/10 directions, the GATES shape). But the *scale* of the heterogeneity — the headline BLP β₂ — is a third of the benchmark and statistically insignificant. A blocking referee finding (omitted randomization strata) was fixed and the run repeated; restoring the strata moved β₂ only from 0.178 to 0.200, which *eliminated* that explanation rather than closing the gap. RECAST reports this as genuine implementation sensitivity of generic-ML heterogeneity inference — not evidence against the benchmark, and certainly not a success it did not earn.

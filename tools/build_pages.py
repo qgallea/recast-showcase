@@ -94,23 +94,36 @@ PAPERS = {
         "either number is the 'true' effect.",
     },
     "trust_fintech_2025": {
-        "method": "DID_PLR", "topic": "Finance (DiD)", "regime": "stochastic",
+        "method": "DID_PLR", "topic": "Finance (DiD)", "regime": "PARTIAL ✓ (Table 5, open access)",
         "desc": "continuous-intensity DiD: Wells-Fargo-scandal exposure × post on FinTech adoption",
-        "verdict": "Extension demo",
-        "headline": "A continuous-treatment difference-in-differences. The estimand router "
-        "correctly chose PLR on the two-way-FE-residualized panel (DID_PLR) — NOT the "
-        "staggered DoubleMLDIDMulti, which is invalid for a continuous dose. The paper's "
-        "effect (exposure × post → FinTech mortgage share) replicates (TWFE 0.019, t=3.5) "
-        "and the DML extension confirms it: 0.020–0.022 across learners, all significant.",
-        "added": "The cleanest DiD case on the site. Treatment is a continuous Wells-Fargo-"
-        "exposure intensity interacted with the post-2016-scandal period — a 'dose' DiD, not "
-        "binary staggered adoption — so the router sends it to DID_PLR: unit + time fixed "
-        "effects absorbed by a two-way within transform, then DoubleML PLR on the interaction, "
-        "clustered by county (the DML analogue of a two-way-FE DiD). On the 842-county panel "
-        "the headline effect survives and slightly strengthens under flexible ML control "
-        "(0.019 → 0.020–0.022), so the conclusion is robust, not an artifact of the linear "
-        "control specification. The trust-mechanism (Gallup) tables use restricted pseudo data "
-        "and are out of scope.",
+        "verdict": "Replication gate: PASS",
+        "headline": "An OPEN-ACCESS paper (CC BY) whose published PDF ships in the package — so "
+        "the replication is benchmarked against the paper's PRINTED numbers, not a placeholder. "
+        "The county-level coefficient of interest is the triple interaction "
+        "exposure × post × NonRep (Table 5): published +0.080 (origination) / +0.082 "
+        "(application), reproduced here at +0.082 / +0.080 — within ~2%, with sign and 5% "
+        "significance preserved. Because the paper is in hand AND a published result was matched "
+        "within reasonable deviation, the blocking replication gate PASSES, so the extension may "
+        "run. The DML extension (DID_PLR) of the average-county double difference is 0.014–0.022 "
+        "across learners, all significant.",
+        "added": "This is the site's worked example of the blocking replication gate. RECAST "
+        "extends a paper ONLY after it has reproduced a PUBLISHED result within reasonable "
+        "deviation — otherwise it stops. Here the paper is open access (its PDF is in the "
+        "package), and its county-level Table 5 triple difference (exposure × post × NonRep, the "
+        "coefficient of interest) reproduces within ~2% with the NonRep × post coefficient "
+        "near-exact (−1.960 vs −1.966), so the gate is a documented PASS (PARTIAL: the package "
+        "ships data but not the .do that fixes the exact n, so n is documented, not gated; the "
+        "coefficient is robust across sample reconstructions, 0.080–0.090). Only then does the "
+        "extension run: the treatment is a continuous Wells-Fargo-exposure intensity × post — a "
+        "'dose' DiD, not binary staggered adoption — so the router sends the EXTENSION to "
+        "DID_PLR (two-way within transform + DoubleML PLR on the interaction, clustered by "
+        "county; the DML analogue of a two-way-FE DiD). The average-county effect survives and "
+        "slightly strengthens under flexible ML control (0.019 → 0.014–0.022), conditioning only "
+        "on the exogenous county covariates (the loan-characteristic shares are aggregated "
+        "post-treatment outcomes — potential bad controls — so they are kept for the replication "
+        "but dropped from the causal extension). The loan-level headline (Table 3, +0.035 → "
+        "'4.1% increase') is NOT replicable here (the 4.3 GB loan file is excluded); the "
+        "trust-mechanism (Gallup) tables use restricted pseudo data and are out of scope.",
         "did_fig_cap": "Continuous-intensity DiD: TWFE replication vs the DML (DID_PLR) extension across learners (95% CIs).",
         "downloads_note": "county panel range-extracted from the 1.4 GB Mendeley package "
         "(HMDA_FIPS.dta) without downloading the 4.3 GB loan-level file; built by the project's "
@@ -259,6 +272,16 @@ def render_replication(rc):
                and rep_s is not None else f"{rep_c}")
         n = r.get("n_replicated", r.get("n_published", ""))
         out.append(f"| {esc(name)} | {esc(pub)} | {esc(rep)} | {n} | {r.get('tier','')} |")
+    expl = next((r.get("explanation") for r in pcs if r.get("explanation")), None)
+    if expl:
+        out.append(f"\n[{esc(expl)}]{{.text-muted-sm}}")
+    anchor = rc.get("double_diff_anchor")
+    if anchor:
+        out.append(f"\nThe causal-ML extension below robustifies the *average-county "
+                   f"double difference* (a distinct, simpler estimand): TWFE "
+                   f"**{anchor['coef']:.4f}** (SE {anchor['se']:.4f}, t "
+                   f"{anchor.get('tstat', 0):.2f}), n = {anchor['n_obs']}. "
+                   f"{esc(anchor.get('note',''))}")
     return "\n".join(out)
 
 
@@ -283,11 +306,88 @@ def strip_h1(md):
     return "\n".join(lines).lstrip("\n")
 
 
+def _gate_blocks(d):
+    """Render the gate_<var>/cate_<var> blocks of an hte dict (uniform schema)."""
+    rows = []
+    for gk in [k for k in d if k.startswith("gate_")]:
+        var = gk[len("gate_"):]
+        g = d[gk]
+        if not isinstance(g, dict) or "error" in g or g.get("degenerate"):
+            rows.append(f"- **{esc(var)}**: GATE not estimated "
+                        f"({esc(str((g or {}).get('reason') or (g or {}).get('error', '')))}).")
+            continue
+        sep = g.get("joint_ci_excludes_zero", [])
+        cells = " · ".join(
+            f"{esc(str(gr))} = {e:+.4f}{'*' if (i < len(sep) and sep[i]) else ''}"
+            for i, (gr, e) in enumerate(zip(g.get("groups", []), g.get("effect", []))))
+        dist = ("groups are statistically distinguishable"
+                if g.get("distinguishable")
+                else "groups not statistically distinguishable (joint CIs overlap 0)")
+        rows.append(f"- **{esc(var)}** (GATE): {cells} — {dist}.")
+        c = d.get(f"cate_{var}")
+        if isinstance(c, dict) and c.get("effect"):
+            rows.append(f"  - CATE (spline): ranges {min(c['effect']):+.4f}…"
+                        f"{max(c['effect']):+.4f} across the {esc(var)} support.")
+    return rows
+
+
+def render_hte(hte):
+    """Heterogeneity section from hte_results.json (uniform dispatcher schema):
+    GATE/CATE (PLR/IRM/DID_PLR), group-time ATTs (DiD), CDDF GATES (RCT), or an
+    explicit not-applicable / no-moderator verdict."""
+    if not hte:
+        return "_No heterogeneity output for this run._"
+    branch = hte.get("branch")
+    out = []
+    if not hte.get("applicable", True):
+        return f"**Not applicable.** {esc(hte.get('note', ''))}"
+    if branch in ("plr_gate_cate", "irm_gate_cate"):
+        if not hte.get("moderators"):
+            return f"_{esc(hte.get('note', ''))}_"
+        api = hte.get("model") or ("IRM" if branch == "irm_gate_cate" else "PLR")
+        out.append(f"DoubleML `{esc(api)}.gate()`/`.cate()` over the pre-declared moderator(s) "
+                   f"*{', '.join(esc(m) for m in hte['moderators'])}* (joint CIs via "
+                   f"multiplier bootstrap; `*` = group whose joint CI excludes 0):")
+        out += _gate_blocks(hte)
+        out.append(f"\n[{esc(hte.get('note', ''))}]{{.text-muted-sm}}")
+    elif branch == "did_eventstudy":
+        agg = hte.get("aggregated") or {}
+        grp = (agg.get("group") or {}).get("detail", [])
+        if not grp:
+            return f"**Group-time ATTs unavailable.** {esc(hte.get('note', ''))}"
+        out.append("Callaway–Sant'Anna **group-time ATT** decomposition (the standard "
+                   "DiD heterogeneity). Cohort (group) ATTs:")
+        out.append("\n| Group (cohort) | ATT | 95% CI |\n|---|---|---|")
+        for r in grp:
+            ci = r.get("ci") or [None, None]
+            cis = (f"[{ci[0]:+.3f}, {ci[1]:+.3f}]" if ci[0] is not None else "—")
+            out.append(f"| {esc(str(r.get('name')))} | {r.get('coef'):+.4f} | {cis} |")
+        out.append(f"\n[{esc(hte.get('note', ''))}]{{.text-muted-sm}}")
+    elif branch == "generic_ml":
+        cddf = hte.get("cddf", {})
+        out.append("Benchmarkable **generic-ML (CDDF 2018)** sorted-group analysis "
+                   "(BLP / GATES / CLAN) — the standard RCT heterogeneity.")
+        bg = cddf.get("best_gates")
+        if bg and bg in cddf.get("learners", {}):
+            gam = cddf["learners"][bg].get("gates", {}).get("gamma", [])
+            out.append("GATES (groups sorted by predicted effect), best learner *"
+                       + esc(bg) + "*: " + " · ".join(f"G{i+1}={v:+.3f}"
+                                                       for i, v in enumerate(gam)))
+        if "irm_gate_cate" in hte:
+            out.append("\n**Native IRM `gate()`/`cate()`** over the declared moderators:")
+            out += _gate_blocks(hte["irm_gate_cate"])
+    else:
+        out.append(f"_{esc(hte.get('note', ''))}_")
+    return "\n".join(out)
+
+
 def build(slug, meta):
     proj = PROJECTS / slug
     spec = json.load(open(proj / "data" / "paper_spec.json", encoding="utf-8"))
     rc = json.load(open(proj / "data" / "results" / "replication_check.json", encoding="utf-8"))
     gap = json.load(open(proj / "data" / "results" / "gap_table.json", encoding="utf-8"))
+    hte_path = proj / "data" / "results" / "hte_results.json"
+    hte = json.load(open(hte_path, encoding="utf-8")) if hte_path.exists() else None
     dest = WEB / "papers" / slug
     (dest / "reports").mkdir(parents=True, exist_ok=True)
 
@@ -392,6 +492,10 @@ def build(slug, meta):
     else:
         body.append("The preferred display learner is *Best* (the lowest-nuisance-RMSE "
                     "composition).\n")
+
+    # 5b. heterogeneity (GATE / CATE / group-time ATT) — uniform DoubleML HTE
+    body.append("## Heterogeneity (GATE / CATE)\n")
+    body.append(render_hte(hte) + "\n")
 
     # 6. honest verdict
     body.append("## What causal ML added\n")

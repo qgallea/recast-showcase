@@ -15,10 +15,15 @@ coverage.
 | PLR / OLS, continuous treatment | ✅ Exercised | [Nunn & Trefler](../papers/nunn_trefler_2010/) (bit-for-bit regression test), [Djankov](../papers/djankov_taxes_2010/) (benchmarked + control discipline) |
 | IRM + generic ML, binary RCT | ✅ Exercised | [Teacher training](../papers/teacher_training_2019/) |
 | IV / PLIV, continuous treatment | ✅ Exercised | [Ashraf & Galor](../papers/ashraf_galor_2013/) — replication exact; extension functional-form-limited (and labeled so) |
-| Replication-failure stop-path | ✅ Exercised | fault-injection test (halts before the extension; no fabrication) |
+| Blocking replication gate (replicate-or-don't-extend) | ✅ Exercised | a fault-injection `FAIL` (sign-flipped target) halts before the extension; the gate also `BLOCKED`s when the paper is missing or no published number exists to match — no fabrication, no extension |
 | Control discipline / suspect controls | ✅ Exercised | [Djankov](../papers/djankov_taxes_2010/) — 6 of 12 controls flagged |
-| Continuous-treatment DiD → PLR on two-way-FE panel (`DID_PLR`) | ✅ Exercised | [Trust / FinTech](../papers/trust_fintech_2025/) — effect replicates (TWFE 0.019) and survives DML (0.020–0.022) |
+| Continuous-treatment DiD → PLR on two-way-FE panel (`DID_PLR`) | ✅ Exercised | [Trust / FinTech](../papers/trust_fintech_2025/) — open-access; published Table 5 triple-diff reproduced within ~2% (gate PASS), then DML extension 0.014–0.022 |
 | Staggered binary DiD → `DoubleMLDIDMulti` | ⚠️ Exercised (with caveat) | [Divine Policy](../papers/divine_policy_2025/) — the CS estimator is infeasible at 50 states; the pipeline falls back to `DID_PLR` and says so |
+| Heterogeneity: **GATE / CATE** via DoubleML `gate()`/`cate()` (PLR · IRM · DID_PLR) | ✅ Exercised | [Nunn & Trefler](../papers/nunn_trefler_2010/) (PLR, `init`/`human_cap`), [Trust / FinTech](../papers/trust_fintech_2025/) (DID_PLR, group ATE by `NonRep` — the paper's own triple-diff dimension); IRM branch synthetic-tested |
+| Heterogeneity: **generic-ML GATES/BLP/CLAN** (CDDF 2018, RCT) | ✅ Exercised | [Teacher training](../papers/teacher_training_2019/) — the benchmarkable sorted-group analysis |
+| Heterogeneity: **DiD group-time ATTs** (Callaway–Sant'Anna `aggregate`) | ⚠️ Wired; not feasible on current papers | [Divine](../papers/divine_policy_2025/) at 50 states → DID_PLR fallback, so group-time cells are reported as unavailable; the decomposition is wired + synthetic-tested |
+
+All HTE runs above flow through **one uniform dispatcher** (`lib/recast_dml.run_heterogeneity`) that picks the standard DoubleML tool per design — `gate()`/`cate()` for PLR/IRM/DID_PLR, group-time ATTs for staggered DiD — and emits an explicit *not-applicable* verdict where DoubleML has no native gate/cate (PLIV/IIVM/APOS). Moderators are always **pre-declared** from the paper's own heterogeneity discussion (no moderator shopping).
 
 ## What has *not* been tested
 

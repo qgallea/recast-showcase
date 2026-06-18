@@ -75,6 +75,10 @@ The manuscript IS in the package (not paywalled). The paper's HEADLINE outcomes 
 Per-learner numbers are in the gap table above. 
 All learners are the DML difference-in-differences estimator described above.
 
+## Heterogeneity (GATE / CATE)
+
+**Group-time ATTs unavailable.** Callaway–Sant'Anna group/time/event-study decomposition is the standard DiD heterogeneity, but it is unavailable at this sample size (DoubleMLDIDMulti infeasible -> DID_PLR fallback strips the group-time cells).
+
 ## What causal ML added
 
 The design is the staggered adoption of state faith-based initiatives, so the router sends it to DoubleMLDIDMulti. But with only 50 states (6 never-treated, several single-state cohorts) the Callaway–Sant'Anna ML estimator hits empty per-(g,t) nuisance cells and cannot be fit — so the pipeline falls back to the DML two-way-FE estimator on a treated × post indicator and labels it loudly, because TWFE under staggered heterogeneity is exactly what Callaway–Sant'Anna exists to correct. The outcome is the log count of faith-based nonprofits, using the paper's own definition (categorized religious by the NCCS or carrying religious terms in the name); the effect is positive and significant (~+3.8%), directionally consistent with the paper's stacked-event-study finding (a significant rise of about 2,258 faith-based organizations). The comparison is directional, not a numeric match: the paper uses a stacked event-study and we run a simplified static DiD on a Python-reconstructed panel (no Stata). The paper's headline religiosity/attitudes outcomes use GSS microdata that is restricted and not shipped in the package, so they are out of scope here.

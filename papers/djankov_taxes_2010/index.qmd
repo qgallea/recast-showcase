@@ -114,6 +114,10 @@ The 4 "tension" cells are SIGNIFICANCE-CATEGORY FLIPS, not coefficient disagreem
 Per-learner numbers are in the gap table above. 
 The preferred display learner is *Best* (the lowest-nuisance-RMSE composition).
 
+## Heterogeneity (GATE / CATE)
+
+_no declared moderators — heterogeneity not computed; the estimand of interest is the (benchmarked) average effect. PLR gate()/cate() is available but no moderators were pre-declared, so none were estimated (no moderator shopping)._
+
 ## What causal ML added
 
 This run targets the over-conditioning failure mode directly. The 'kitchen-sink' OLS reproduces exactly and the DML port strengthens the tax effect, matching the benchmark on 17 of 21 cells (the four 'tension' cells are significance-category flips on near-identical coefficients, not disagreements). The contribution is control discipline: a screen flags 6 of 12 inherited controls as plausible bad controls (a tax-payments mediator and a fiscal-bundle of sibling tax variables). Per the rule, the inherited full set stays the headline for comparability, and a documented sensitivity excluding the suspects is reported — the five-year estimate moves −0.200 → −0.230, the attenuation you would expect if those controls sit on the causal path. No claim is made that either number is the 'true' effect.

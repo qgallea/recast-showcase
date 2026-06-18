@@ -6,18 +6,21 @@ description: "Tiered replication, the estimand router, the causal-ML extension, 
 ## At a glance
 
 Each box below is an **isolated agent** that communicates only through files. The
-**replication gate** halts the run before any ML if the replication fails; the
-**AI-review loop** iterates up to two rounds, and the DML-technical referee is the
-sole authority to block.
+**replication gate** is the first principle: RECAST will not extend a paper it
+cannot first replicate. The run halts before any ML unless **(1)** the original
+paper is in hand and **(2)** a *published* result has been reproduced within
+reasonable deviation. The **AI-review loop** then iterates up to two rounds, and
+the DML-technical referee is the sole authority to block.
 
 ```{mermaid}
 flowchart TD
     IN([Paper PDF + replication package])
+    PRE{"Paper in hand?"}
     S1["Stage 1 · Paper intelligence<br/>read code first → paper_spec.json"]
     S2["Stage 2 · Data prep<br/>→ dataset.parquet"]
     S3["Stage 3 · Replication<br/>tiered verdict per coefficient"]
     GATE{Replication gate}
-    HALT([Halt — no ML, no fabricated numbers])
+    HALT([Halt — no extension without a verified replication])
     S4["Stage 4 · Causal-ML extension<br/>estimand router · DoubleML · benchmark-blinded"]
     S5["Stage 5 · Diagnostics"]
     S6["Stage 6 · Report<br/>gap table + estimand statement"]
@@ -47,8 +50,12 @@ flowchart TD
       DEC -- no --> FIN
     end
 
-    IN --> S1 --> S2 --> S3 --> GATE
-    GATE -- "FAIL: sign flip / sig change" --> HALT
+    IN --> PRE
+    PRE -- "no → BLOCKED" --> HALT
+    PRE -- yes --> S1
+    S1 --> S2 --> S3 --> GATE
+    GATE -- "FAIL: numbers disagree (sign / sig)" --> HALT
+    GATE -- "BLOCKED: no published target matched" --> HALT
     GATE -- "PASS / documented partial" --> S4
     S4 --> ROUTER --> S5 --> S6
     S6 --> RG
@@ -58,7 +65,7 @@ flowchart TD
     class IN,OUT io
     class S1,S2,S3,S4,S5,S6 ag
     class M1,M2,M3,M4 mod
-    class RG,RT,SY,DEC,RVA,FIN ref
+    class RG,RT,SY,DEC,RVA,FIN,PRE ref
     class HALT stop
     classDef ag fill:#eef3f8,stroke:#2c5f8a,stroke-width:1px,color:#16242f;
     classDef mod fill:#ffffff,stroke:#2c5f8a,stroke-dasharray:4 2,color:#16242f;
@@ -69,24 +76,43 @@ flowchart TD
 
 ## Step 1 — Replicate (tiered)
 
-RECAST first reproduces the paper's headline result *coefficient by coefficient*,
+Replication is not a formality — it is the **precondition for everything after
+it**. RECAST reproduces the paper's headline result *coefficient by coefficient*,
 at the paper's own standard-error convention (classical, robust, or clustered —
 getting this wrong is a common silent error). Two regimes:
 
-- **Deterministic** — the original code/data are on disk, so each headline
-  coefficient is graded against the printed table:
+- **Deterministic** — the original printed table is the target, graded per
+  coefficient:
   - **Success** — coefficient and t/SE match to printed precision, n exact.
-  - **Partial** — sign and significance preserved, n within tolerance, *and* every
-    numeric gap has a specific documented cause.
+  - **Partial** — sign and significance preserved, the coefficient within
+    reasonable deviation, *and* every numeric gap has a specific documented cause
+    (e.g. the package ships data but not the code that fixes the exact estimation
+    sample, so n is documented rather than gated).
   - **Failure** — a sign flip, a significance-category change, or an unexplained gap.
-- **Stochastic** — no original package is available, so there is no deterministic
-  target; RECAST records a documented *partial* and defers the comparison to the
-  benchmark gap table (this is how the teacher-training paper is handled, honestly).
+- **Stochastic** — the *target itself* is a stochastic ML estimate (a revisit /
+  benchmark paper), so the comparison is graded via the benchmark gap table's
+  two-layer materiality rule rather than printed precision. This still requires a
+  real target — it is **not** a way to pass with no number to match.
 
-**The failure gate is enforced in code.** If replication fails, the pipeline
-**stops before any ML runs** — no extension, no fabricated numbers. A deliberate
-fault-injection test (a sign-flipped target) confirms this: stage 4 halts in
-seconds and writes a `failed` status rather than producing an estimate.
+**The gate is blocking, and it is enforced in code** (`replication_gate`). The
+pipeline reaches the causal-ML extension only if **both** hold — otherwise it
+halts and writes a status, never an estimate:
+
+- **`BLOCKED`** — the paper is missing, *or* there is no published number to
+  verify against (the relevant table/code isn't in the package, or only
+  restricted/pseudo data shipped). A replication that matches *nothing* is
+  unverifiable, so it cannot license an extension. (This deliberately retires an
+  earlier escape hatch where "no target available / paywalled" was waved through
+  as a stochastic pass.)
+- **`FAIL`** — a published target existed but the replication missed it (sign
+  flip, significance change, unexplained gap). A deliberate fault-injection test
+  (a sign-flipped target) confirms stage 4 halts in seconds.
+- **`PASS`** — at least one *published* headline reproduced within reasonable
+  deviation (Success, or documented Partial). Only then does the extension run.
+
+So `BLOCKED` ≠ `FAIL`: *FAIL* means we tried and the numbers disagree; *BLOCKED*
+means a verified replication was never possible. Both stop the pipeline before any
+ML — no extension, no fabricated numbers.
 
 ## Step 2 — Extend (causal ML)
 

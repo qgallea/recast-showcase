@@ -42,6 +42,8 @@ The quadratic IV hump replicates exactly (optimal-diversity turning point 0.690)
 | Table 2 col 5 | 285.19 (88.064 se) | 285.1899 (88.063) | 21 | PARTIAL |
 | Table 2 col 5 | -206.576 (66.852 se) | -206.5759 (66.852) | 21 | SUCCESS |
 
+[n=21 generated-instrument 2SLS; exact match depends on the first-stage fit reconstruction]{.text-muted-sm}
+
 ## The gap table
 
 Original result, our replication/extension, the published benchmark (where one exists), and the verdict. The estimator never saw the benchmark — it is compared only after the results were frozen.
@@ -85,6 +87,10 @@ No revisit-paper benchmark. Replication compares to the original published quadr
 
 Per-learner numbers are in the gap table above. 
 The displayed learners are Forest and Lasso; both are the linearized PLIV, reported as exploratory.
+
+## Heterogeneity (GATE / CATE)
+
+_No revisit-paper benchmark for Ashraf-Galor; the comparison is to the original published quadratic 2SLS. Heterogeneity not in scope._
 
 ## What causal ML added
 

@@ -103,6 +103,14 @@ sensitivity is disclosed (−0.200 → −0.230).</p>
 fault-injection halts on a bad replication instead of fabricating a result.</p>
 :::
 ::: {.feature}
+**Replicate, or don't extend**
+<p>The replication gate is blocking. RECAST will not run a causal-ML extension
+unless it has the paper <em>and</em> has reproduced a <em>published</em> number
+within reasonable deviation. On the open-access Trust/FinTech paper it reproduces
+Table 5's triple difference within ~2% and passes; a missing paper or a result
+with no published number to match is <code>BLOCKED</code>, not waved through.</p>
+:::
+::: {.feature}
 **Extends to difference-in-differences**
 <p>On a continuous-treatment DiD (FinTech adoption after the Wells-Fargo scandal)
 the router picks PLR on the two-way-FE panel and the effect survives DML; on a
@@ -120,7 +128,7 @@ few — and labels the fallback honestly.</p>
 | [Loyalka et al. (2019)](papers/teacher_training_2019/) | IRM + generic ML | Ready | ATE null reproduces; β₂ heterogeneity diverges (honest) |
 | [Ashraf & Galor (2013)](papers/ashraf_galor_2013/) | PLIV (IV) | Ready | Quadratic hump replicates exactly; PLIV functional-form-limited |
 | [Djankov et al. (2010)](papers/djankov_taxes_2010/) | PLR / OLS | Ready | 3/3 exact OLS; control-discipline sensitivity disclosed |
-| [Trust / FinTech (2025)](papers/trust_fintech_2025/) | DiD → DID_PLR | Extension demo | Continuous-intensity DiD replicates (0.019) and survives DML (0.020–0.022) |
+| [Trust / FinTech (2025)](papers/trust_fintech_2025/) | DiD → DID_PLR | Gate PASS | Open-access: published Table 5 triple-diff reproduced within ~2% → gate passes → DML extension (0.014–0.022) |
 | [Divine Policy (2025)](papers/divine_policy_2025/) | Staggered DiD | Extension demo | CS estimator infeasible at 50 states → graceful, flagged DID_PLR fallback |
 
 [Browse all papers →](papers.qmd)

@@ -33,9 +33,17 @@ for slug, title in TITLES.items():
     learners = res["specifications"][0]["learners"]
 
     labels, coefs, los, his, colors = [], [], [], [], []
-    pc = rc["per_coefficient"][0]
-    c, se = pc["replicated_coef"], pc["replicated_se"]
-    labels.append("TWFE (replication)")
+    # Plot the TWFE estimate on the SAME estimand the DML extends: the double-diff
+    # anchor where present (trust_fintech, whose published target is a triple-diff
+    # on a different scale), else the first replicated coefficient (divine_policy).
+    anchor = rc.get("double_diff_anchor")
+    if anchor:
+        c, se = anchor["coef"], anchor["se"]
+        labels.append("TWFE double-diff")
+    else:
+        pc = rc["per_coefficient"][0]
+        c, se = pc["replicated_coef"], pc["replicated_se"]
+        labels.append("TWFE (replication)")
     coefs.append(c); los.append(c - 1.96 * se); his.append(c + 1.96 * se)
     colors.append("#b5462f")
     for ln, r in learners.items():
