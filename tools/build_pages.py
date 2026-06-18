@@ -118,28 +118,33 @@ PAPERS = {
     },
     "divine_policy_2025": {
         "method": "DID → DID_PLR", "topic": "Religion & Policy (DiD)", "regime": "stochastic",
-        "desc": "staggered binary DiD: faith-based-initiative adoption on religious-nonprofit prevalence",
+        "desc": "staggered binary DiD: faith-based-initiative adoption on the count of faith-based nonprofits",
         "verdict": "Extension demo",
-        "headline": "A staggered BINARY DiD that stress-tested the pipeline. DoubleMLDIDMulti "
-        "(Callaway–Sant'Anna) is infeasible on a 50-state panel, so the pipeline gracefully fell "
-        "back to the DML two-way-FE estimator (loudly flagged). The effect on religious-nonprofit "
-        "share is positive but underpowered: TWFE +0.0016 (t=1.4); DML +0.0018–0.0025, "
-        "significant for one of three learners.",
-        "added": "This run is valuable precisely because it found a limit. The design is "
-        "staggered adoption of state faith-based initiatives, so the router routes it to "
-        "DoubleMLDIDMulti. But with only 50 states (6 never-treated, several single-state "
-        "cohorts) the Callaway–Sant'Anna ML estimator hits empty per-(g,t) nuisance cells and "
-        "cannot be fit. Rather than crash, the pipeline falls back to the DML two-way-FE "
-        "estimator on a treated × post indicator and labels it loudly — because TWFE under "
-        "staggered heterogeneity is exactly what Callaway–Sant'Anna exists to correct. The "
-        "estimate is directionally consistent with the paper (faith-based initiatives → more "
-        "faith-based nonprofits) but small and significant for only one learner at this sample "
-        "size. The paper's headline GSS attitudes outcome lives in restricted files not shipped "
-        "in the package, so this recast targets the religious-nonprofit outcome that is included.",
-        "did_fig_cap": "Staggered DiD: TWFE replication vs the DML extension (DoubleMLDIDMulti infeasible at 50 states → DID_PLR fallback) across learners (95% CIs).",
+        "headline": "A staggered binary DiD on the paper's own outcome — the count of "
+        "faith-based nonprofits. DoubleMLDIDMulti (Callaway–Sant'Anna) is infeasible on a "
+        "50-state panel, so the pipeline gracefully falls back to the DML two-way-FE estimator "
+        "(loudly flagged). The effect is positive and significant — TWFE +0.038 (t=2.3); DML "
+        "+0.036–0.041, significant across all three learners — directionally consistent with "
+        "the paper's reported increase (+2,258 faith-based organizations).",
+        "added": "The design is the staggered adoption of state faith-based initiatives, so the "
+        "router sends it to DoubleMLDIDMulti. But with only 50 states (6 never-treated, several "
+        "single-state cohorts) the Callaway–Sant'Anna ML estimator hits empty per-(g,t) nuisance "
+        "cells and cannot be fit — so the pipeline falls back to the DML two-way-FE estimator on "
+        "a treated × post indicator and labels it loudly, because TWFE under staggered "
+        "heterogeneity is exactly what Callaway–Sant'Anna exists to correct. The outcome is the "
+        "log count of faith-based nonprofits, using the paper's own definition (categorized "
+        "religious by the NCCS or carrying religious terms in the name); the effect is positive "
+        "and significant (~+3.8%), directionally consistent with the paper's stacked-event-study "
+        "finding (a significant rise of about 2,258 faith-based organizations). The comparison is "
+        "directional, not a numeric match: the paper uses a stacked event-study and we run a "
+        "simplified static DiD on a Python-reconstructed panel (no Stata). The paper's headline "
+        "religiosity/attitudes outcomes use GSS microdata that is restricted and not shipped in "
+        "the package, so they are out of scope here.",
+        "did_fig_cap": "Staggered DiD on the count of faith-based nonprofits: TWFE replication vs the DML extension (DoubleMLDIDMulti infeasible at 50 states → DID_PLR fallback) across learners (95% CIs).",
         "downloads_note": "state×year panel reconstructed in Python from the openICPSR raw files "
         "(Sager faith-based-law timing + the 14.4M-row NCCS nonprofit panel) by the project's "
-        "`build_project.py`; the GSS attitudes outcome is restricted and not included.",
+        "`build_project.py`; the manuscript IS in the package, but the headline GSS attitudes "
+        "outcome uses restricted microdata that is not.",
     },
 }
 
