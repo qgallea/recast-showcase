@@ -1,10 +1,17 @@
 ---
-pagetitle: "RECAST — Replicate, extend with causal ML, AI-referee, report honestly"
+pagetitle: "RECAST — Replication and Extension with Causal AI Statistical Toolkit"
 page-layout: full
 toc: false
 ---
 
 ::: {.hero-banner}
+
+::: {.recast-title}
+[RECAST]{.recast-wordmark}
+
+**R**eplication and **E**xtension with **C**ausal **A**I **S**tatistical **T**oolkit
+:::
+
 ## Replicate a result. Extend it with causal ML. Referee it. Report it honestly.
 
 RECAST takes a published econometrics paper and its replication data, reproduces
@@ -32,7 +39,7 @@ only through files, so every number on this site is traceable to an artifact.
 
 ::: {.pipeline-steps}
 ::: {.step}
-[]{.step-n}1
+[1]{.step-n}
 ### Replicate
 Reproduce the original OLS/IV result *coefficient by coefficient*, at the paper's
 own standard-error convention. A two-regime test grades each headline coefficient
@@ -40,7 +47,7 @@ own standard-error convention. A two-regime test grades each headline coefficien
 before any ML runs.
 :::
 ::: {.step}
-[]{.step-n}2
+[2]{.step-n}
 ### Extend
 Swap the parametric first stage for cross-fitted machine learning (DoubleML:
 PLR / IRM / PLIV), keeping the paper's *inherited* conditioning set. Seven
@@ -48,7 +55,7 @@ learners, median aggregation, B&N-adjusted SEs; generic ML (BLP / GATES / CLAN)
 for heterogeneity when the treatment is binary.
 :::
 ::: {.step}
-[]{.step-n}3
+[3]{.step-n}
 ### Review
 Two isolated AI referees — a general referee (identification + replication
 integrity) and a strict DML-technical referee (a 19-point canonical audit, sole
@@ -56,7 +63,7 @@ authority to *block*) — review the extension, not the original paper. A synthe
 referee quality-controls them.
 :::
 ::: {.step}
-[]{.step-n}4
+[4]{.step-n}
 ### Report
 A gap table (original | ours | benchmark | difference), an estimand statement, and
 a plain-English verdict that says what the machine learning did **and did not**

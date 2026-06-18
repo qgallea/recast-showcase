@@ -26,7 +26,17 @@ html { overflow-x: hidden; }
   margin-bottom: 2.5rem;
   text-align: center;
 }
-.hero-banner h2 { font-size: 2.15rem; font-weight: 650; margin-bottom: 1rem; }
+.recast-title { margin-bottom: 1.4rem; }
+.recast-wordmark {
+  display: block; font-size: 3rem; font-weight: 800; letter-spacing: 0.09em;
+  color: $primary; margin: 0 0 0.25rem; line-height: 1.05;
+}
+.recast-title p {
+  font-size: 1.18rem; font-weight: 500; color: #495057;
+  letter-spacing: 0.01em; max-width: 800px; margin: 0 auto;
+}
+.recast-title strong { color: $primary; font-weight: 800; }
+.hero-banner h2 { font-size: 2.05rem; font-weight: 650; margin: 0 0 1rem; }
 .hero-banner p {
   font-size: 1.12rem; color: #495057; max-width: 700px; margin: 0 auto 1.6rem;
 }
