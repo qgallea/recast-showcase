@@ -96,7 +96,7 @@ PAPERS = {
     "trust_fintech_2025": {
         "method": "DID_PLR", "topic": "Finance (DiD)", "regime": "PARTIAL ✓ (Table 5, open access)",
         "desc": "continuous-intensity DiD: Wells-Fargo-scandal exposure × post on FinTech adoption",
-        "verdict": "Replication gate: PASS",
+        "verdict": "Ready",
         "headline": "An OPEN-ACCESS paper (CC BY) whose published PDF ships in the package — so "
         "the replication is benchmarked against the paper's PRINTED numbers, not a placeholder. "
         "The county-level coefficient of interest is the triple interaction "
@@ -132,7 +132,7 @@ PAPERS = {
     "divine_policy_2025": {
         "method": "DID → DID_PLR", "topic": "Religion & Policy (DiD)", "regime": "stochastic",
         "desc": "staggered binary DiD: faith-based-initiative adoption on the count of faith-based nonprofits",
-        "verdict": "Extension demo",
+        "verdict": "Ready",
         "headline": "A staggered binary DiD on the paper's own outcome — the count of "
         "faith-based nonprofits. DoubleMLDIDMulti (Callaway–Sant'Anna) is infeasible on a "
         "50-state panel, so the pipeline gracefully falls back to the DML two-way-FE estimator "
@@ -328,10 +328,18 @@ def _gate_blocks(d):
         cells = " · ".join(
             f"{esc(str(gr))} = {e:+.4f}{'*' if (i < len(sep) and sep[i]) else ''}"
             for i, (gr, e) in enumerate(zip(g.get("groups", []), g.get("effect", []))))
-        dist = ("groups are statistically distinguishable"
-                if g.get("distinguishable")
-                else "groups not statistically distinguishable (joint CIs overlap 0)")
-        rows.append(f"- **{esc(var)}** (GATE): {cells} — {dist}.")
+        nsig, m = sum(1 for s in sep if s), len(sep)
+        if m and nsig == 0:
+            note = ("no subgroup's joint CI excludes zero — no subgroup effect detectable "
+                    "at this n")
+        elif m and nsig == m:
+            note = f"all {m} subgroups are individually significant (joint CIs exclude 0)"
+        else:
+            note = (f"individually significant (\\*) in {nsig} of {m} subgroups; `gate()` "
+                    "does not test between-group differences and the point estimates "
+                    "overlap, so the subgroups are **not** shown to differ from one "
+                    "another (exploratory, underpowered)")
+        rows.append(f"- **{esc(var)}** (GATE): {cells} — {note}.")
         c = d.get(f"cate_{var}")
         if isinstance(c, dict) and c.get("effect"):
             rows.append(f"  - CATE (spline): ranges {min(c['effect']):+.4f}…"

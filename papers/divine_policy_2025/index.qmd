@@ -8,7 +8,7 @@ categories:
   - "DID → DID_PLR"
   - "Religion & Policy (DiD)"
   - "2025"
-  - "Extension demo"
+  - "Ready"
 image: forest_plot.png
 paper-journal: "American Economic Journal: Applied Economics"
 paper-doi: "10.1257/app.20240018"
@@ -21,7 +21,7 @@ replication-regime: "stochastic"
 ::: {.summary-lead}
 A staggered binary DiD on the paper's own outcome — the count of faith-based nonprofits. DoubleMLDIDMulti (Callaway–Sant'Anna) is infeasible on a 50-state panel, so the pipeline gracefully falls back to the DML two-way-FE estimator (loudly flagged). The effect is positive and significant — TWFE +0.038 (t=2.3); DML +0.036–0.041, significant across all three learners — directionally consistent with the paper's reported increase (+2,258 faith-based organizations).
 
-[**Bottom line** — replication **PASS** (PARTIAL); extension demonstration (not yet AI-reviewed).]{.verdict}
+[**Bottom line** — replication **PASS** (PARTIAL); passed two-referee AI review.]{.verdict}
 :::
 
 ::: {.glance}
@@ -94,7 +94,31 @@ The design is the staggered adoption of state faith-based initiatives, so the ro
 
 ## AI peer review
 
-This run is a **replication + causal-ML extension demonstration** of the difference-in-differences pathway; it has not yet been put through the two-referee AI review (unlike the studies above).
+The extension was reviewed over **1 round** by two isolated referees (general + DML-technical) with a synthesis quality-control step. The reports are embedded verbatim.
+
+::: {.panel-tabset}
+
+## Round 1 · General
+
+{{< include reports/r1_refG.md >}}
+
+## Round 1 · DML-technical
+
+{{< include reports/r1_refT.md >}}
+
+## Round 1 · Synthesis
+
+{{< include reports/r1_synthesis.md >}}
+
+## Round 1 · Revision log
+
+{{< include reports/r1_changelog.md >}}
+
+## Final report
+
+{{< include reports/final_report.md >}}
+
+:::
 
 ## Reproduce it
 

@@ -8,7 +8,7 @@ categories:
   - "DID_PLR"
   - "Finance (DiD)"
   - "2025"
-  - "Replication gate: PASS"
+  - "Ready"
 image: forest_plot.png
 paper-journal: "Journal of Financial Economics"
 paper-doi: "10.1016/j.jfineco.2025.104062"
@@ -21,7 +21,7 @@ replication-regime: "PARTIAL ✓ (Table 5, open access)"
 ::: {.summary-lead}
 An OPEN-ACCESS paper (CC BY) whose published PDF ships in the package — so the replication is benchmarked against the paper's PRINTED numbers, not a placeholder. The county-level coefficient of interest is the triple interaction exposure × post × NonRep (Table 5): published +0.080 (origination) / +0.082 (application), reproduced here at +0.082 / +0.080 — within ~2%, with sign and 5% significance preserved. Because the paper is in hand AND a published result was matched within reasonable deviation, the blocking replication gate PASSES, so the extension may run. The DML extension (DID_PLR) of the average-county double difference is 0.014–0.022 across learners, all significant.
 
-[**Bottom line** — replication **PASS** (PARTIAL); extension demonstration (not yet AI-reviewed).]{.verdict}
+[**Bottom line** — replication **PASS** (PARTIAL); passed two-referee AI review.]{.verdict}
 :::
 
 ::: {.glance}
@@ -106,7 +106,7 @@ Open-access paper: the county-level coefficient of interest (Table 5 triple inte
 Pre-declared subgroup effects via the standard DoubleML `gate()`/`cate()` (or group-time ATTs for DiD). Exploratory unless a benchmark exists; moderators are fixed in advance (no moderator shopping).
 
 DoubleML `DID_PLR.gate()`/`.cate()` over the pre-declared moderator(s) *NonRep* (joint CIs via multiplier bootstrap; `*` = group whose joint CI excludes 0):
-- **NonRep** (GATE): NonRep T1 = +0.0202 · NonRep T2 = +0.0108 · NonRep T3 = +0.0269* — groups are statistically distinguishable.
+- **NonRep** (GATE): NonRep T1 = +0.0202 · NonRep T2 = +0.0108 · NonRep T3 = +0.0269* — individually significant (\*) in 1 of 3 subgroups; `gate()` does not test between-group differences and the point estimates overlap, so the subgroups are **not** shown to differ from one another (exploratory, underpowered).
   - CATE (spline): ranges +0.0132…+0.0378 across the NonRep support.
 
 [EXPLORATORY: no benchmark (generic ML needs a binary treatment). BLP-projection of the heterogeneous slope; joint CIs via multiplier bootstrap; small n -> groups are often statistically indistinguishable and we say so.]{.text-muted-sm}
@@ -117,7 +117,31 @@ This is the site's worked example of the blocking replication gate. RECAST exten
 
 ## AI peer review
 
-This run is a **replication + causal-ML extension demonstration** of the difference-in-differences pathway; it has not yet been put through the two-referee AI review (unlike the studies above).
+The extension was reviewed over **1 round** by two isolated referees (general + DML-technical) with a synthesis quality-control step. The reports are embedded verbatim.
+
+::: {.panel-tabset}
+
+## Round 1 · General
+
+{{< include reports/r1_refG.md >}}
+
+## Round 1 · DML-technical
+
+{{< include reports/r1_refT.md >}}
+
+## Round 1 · Synthesis
+
+{{< include reports/r1_synthesis.md >}}
+
+## Round 1 · Revision log
+
+{{< include reports/r1_changelog.md >}}
+
+## Final report
+
+{{< include reports/final_report.md >}}
+
+:::
 
 ## Reproduce it
 

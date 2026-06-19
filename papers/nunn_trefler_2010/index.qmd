@@ -110,9 +110,9 @@ Every estimate together: the original published number, our replication/extensio
 Pre-declared subgroup effects via the standard DoubleML `gate()`/`cate()` (or group-time ATTs for DiD). Exploratory unless a benchmark exists; moderators are fixed in advance (no moderator shopping).
 
 DoubleML `PLR.gate()`/`.cate()` over the pre-declared moderator(s) *init, human_cap* (joint CIs via multiplier bootstrap; `*` = group whose joint CI excludes 0):
-- **init** (GATE): init T1 = -0.0178 · init T2 = +0.0477 · init T3 = +0.0068 — groups not statistically distinguishable (joint CIs overlap 0).
+- **init** (GATE): init T1 = -0.0178 · init T2 = +0.0477 · init T3 = +0.0068 — no subgroup's joint CI excludes zero — no subgroup effect detectable at this n.
   - CATE (spline): ranges -0.0749…+0.0592 across the init support.
-- **human_cap** (GATE): human_cap T1 = +0.0026 · human_cap T2 = +0.0285 · human_cap T3 = +0.0210 — groups not statistically distinguishable (joint CIs overlap 0).
+- **human_cap** (GATE): human_cap T1 = +0.0026 · human_cap T2 = +0.0285 · human_cap T3 = +0.0210 — no subgroup's joint CI excludes zero — no subgroup effect detectable at this n.
   - CATE (spline): ranges -0.0062…+0.0420 across the human_cap support.
 
 [EXPLORATORY: no benchmark exists for these quantities (generic ML requires a binary treatment). BLP-projection of the heterogeneous slope; joint CIs via multiplier bootstrap; n is small — groups are likely statistically indistinguishable and we say so when they are.]{.text-muted-sm}
