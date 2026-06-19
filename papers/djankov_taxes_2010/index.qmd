@@ -16,24 +16,30 @@ recast-path: "PLR"
 replication-regime: "deterministic"
 ---
 
-## Summary
+*Djankov, S., Ganser, T., McLiesh, C., Ramalho, R., Shleifer, A. (2010) · American Economic Journal: Macroeconomics*
 
-**Citation:** Djankov, S., Ganser, T., McLiesh, C., Ramalho, R., Shleifer, A. (2010). *The Effect of Corporate Taxes on Investment and Entrepreneurship*. *American Economic Journal: Macroeconomics*.
-
+::: {.summary-lead}
 The all-12-controls OLS replicates 3/3 exactly and the DML port is 17/21 consistent with the benchmark; a control-discipline screen flags 6 of 12 controls and discloses the resulting sensitivity (−0.200 → −0.230).
 
-::: {.glance}
-<div class="g"><span class="k">Method path</span><span class="v">PLR</span></div>
-<div class="g"><span class="k">Replication</span><span class="v">deterministic</span></div>
-<div class="g"><span class="k">Review verdict</span><span class="v">Ready</span></div>
-<div class="g"><span class="k">Identification</span><span class="v">OLS</span></div>
+[**Bottom line** — replication **PASS** (SUCCESS); passed two-referee AI review.]{.verdict}
 :::
 
-## Estimand & identification
+::: {.glance}
+<div class="g"><span class="k">Field</span><span class="v">Public Finance</span></div>
+<div class="g"><span class="k">Identification</span><span class="v">OLS</span></div>
+<div class="g"><span class="k">Causal-ML method</span><span class="v">PLR</span></div>
+<div class="g"><span class="k">Replication</span><span class="v">PASS · SUCCESS</span></div>
+:::
+
+## The original paper & its claim
+
+What the paper estimates, the identification strategy RECAST inherits unchanged, and the exact estimand carried into the extension.
 
 {{< include estimand_statement.md >}}
 
-## Replication
+## Step 1 · Replicate the published result
+
+Before any machine learning, RECAST reproduces the paper's headline coefficient(s) at the original standard-error convention. **A failed replication halts the pipeline — no extension runs on a result we could not reproduce.**
 
 **Regime:** deterministic · **Gate:** PASS · **Overall tier:** SUCCESS
 
@@ -43,9 +49,17 @@ The all-12-controls OLS replicates 3/3 exactly and the DML port is 17/21 consist
 | B&N (2024) Table 1, Panel A, col (8) OLS, Line 2 (= Djankov Table 5D, first-year effective) | -0.117 (0.106 se) | -0.1165 (0.106) | 61 | SUCCESS |
 | B&N (2024) Table 1, Panel A, col (8) OLS, Line 3 (= Djankov Table 5D, five-year effective) | -0.189 (0.118 se) | -0.1887 (0.118) | 61 | SUCCESS |
 
-## The gap table
+## Step 2 · Extend with causal ML
 
-Original result, our replication/extension, the published benchmark (where one exists), and the verdict. The estimator never saw the benchmark — it is compared only after the results were frozen.
+RECAST then swaps the parametric first stage for cross-fitted machine learning (**PLR**), keeping the paper's *inherited* conditioning set — no data-driven control selection.
+
+![Estimates and 95% intervals across learners (and OLS).](forest_plot.png)
+
+The preferred display learner is *Best* (lowest nuisance RMSE); full per-learner numbers are in the results table below.
+
+## Results — original vs. RECAST, side by side
+
+Every estimate together: the original published number, our replication/extension, and the published benchmark where one exists. The estimator never saw the benchmark — it is compared only after the results were frozen.
 
 
 **Statutory rate**
@@ -93,7 +107,7 @@ Original result, our replication/extension, the published benchmark (where one e
 |---|---|---|---|---|---|
 | 5yr-Forest excl 6 suspect controls | - | -0.230 (B&N-adj SE 0.089; n_rep=50) | headline 5yr-Forest -0.200 (full set) | -0.0299 | sensitivity (inherited set is headline; this is the documented robustness variant) |
 
-*Verdict counts:* exact 3, consistent 17, tension 4.
+*Verdict counts:* exact 3, consistent 17, tension 4, sensitivity (inherited set is headline; this is the documented robustness variant) 1.
 
 ::: {.callout-warning}
 ## Note
@@ -107,18 +121,13 @@ The 4 "tension" cells are SIGNIFICANCE-CATEGORY FLIPS, not coefficient disagreem
 :::
 
 
-## Causal-ML extension
+## Heterogeneity — does the effect vary?
 
-![Estimates and 95% intervals across learners (and OLS).](forest_plot.png)
-
-Per-learner numbers are in the gap table above. 
-The preferred display learner is *Best* (the lowest-nuisance-RMSE composition).
-
-## Heterogeneity (GATE / CATE)
+Pre-declared subgroup effects via the standard DoubleML `gate()`/`cate()` (or group-time ATTs for DiD). Exploratory unless a benchmark exists; moderators are fixed in advance (no moderator shopping).
 
 _no declared moderators — heterogeneity not computed; the estimand of interest is the (benchmarked) average effect. PLR gate()/cate() is available but no moderators were pre-declared, so none were estimated (no moderator shopping)._
 
-## What causal ML added
+## The bottom line — what causal ML added
 
 This run targets the over-conditioning failure mode directly. The 'kitchen-sink' OLS reproduces exactly and the DML port strengthens the tax effect, matching the benchmark on 17 of 21 cells (the four 'tension' cells are significance-category flips on near-identical coefficients, not disagreements). The contribution is control discipline: a screen flags 6 of 12 inherited controls as plausible bad controls (a tax-payments mediator and a fiscal-bundle of sibling tax variables). Per the rule, the inherited full set stays the headline for comparability, and a documented sensitivity excluding the suspects is reported — the five-year estimate moves −0.200 → −0.230, the attenuation you would expect if those controls sit on the causal path. No claim is made that either number is the 'true' effect.
 
@@ -150,6 +159,6 @@ The extension was reviewed over **1 round** by two isolated referees (general + 
 
 :::
 
-## Downloads & reproducibility
+## Reproduce it
 
 - Full result artifacts (gap table, frozen estimates, referee reports) live in the project's `data/results/` and `paper/review_history/`.

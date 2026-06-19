@@ -16,24 +16,30 @@ recast-path: "PLIV (IV)"
 replication-regime: "deterministic"
 ---
 
-## Summary
+*Ashraf, Quamrul, Galor, Oded (2013) · American Economic Review*
 
-**Citation:** Ashraf, Quamrul, Galor, Oded (2013). *The Out of Africa Hypothesis, Human Genetic Diversity, and Comparative Economic Development*. *American Economic Review*.
-
+::: {.summary-lead}
 The quadratic IV hump replicates exactly (optimal-diversity turning point 0.690); a linear PLIV cannot represent a hump, so the extension is labeled functional-form-limited rather than passed off as the effect.
 
-::: {.glance}
-<div class="g"><span class="k">Method path</span><span class="v">PLIV (IV)</span></div>
-<div class="g"><span class="k">Replication</span><span class="v">deterministic</span></div>
-<div class="g"><span class="k">Review verdict</span><span class="v">Ready</span></div>
-<div class="g"><span class="k">Identification</span><span class="v">IV</span></div>
+[**Bottom line** — replication **PASS** (PARTIAL); passed two-referee AI review.]{.verdict}
 :::
 
-## Estimand & identification
+::: {.glance}
+<div class="g"><span class="k">Field</span><span class="v">Deep roots & Growth</span></div>
+<div class="g"><span class="k">Identification</span><span class="v">IV</span></div>
+<div class="g"><span class="k">Causal-ML method</span><span class="v">PLIV (IV)</span></div>
+<div class="g"><span class="k">Replication</span><span class="v">PASS · PARTIAL</span></div>
+:::
+
+## The original paper & its claim
+
+What the paper estimates, the identification strategy RECAST inherits unchanged, and the exact estimand carried into the extension.
 
 {{< include estimand_statement.md >}}
 
-## Replication
+## Step 1 · Replicate the published result
+
+Before any machine learning, RECAST reproduces the paper's headline coefficient(s) at the original standard-error convention. **A failed replication halts the pipeline — no extension runs on a result we could not reproduce.**
 
 **Regime:** deterministic · **Gate:** PASS · **Overall tier:** PARTIAL
 
@@ -44,9 +50,17 @@ The quadratic IV hump replicates exactly (optimal-diversity turning point 0.690)
 
 [n=21 generated-instrument 2SLS; exact match depends on the first-stage fit reconstruction]{.text-muted-sm}
 
-## The gap table
+## Step 2 · Extend with causal ML
 
-Original result, our replication/extension, the published benchmark (where one exists), and the verdict. The estimator never saw the benchmark — it is compared only after the results were frozen.
+RECAST then swaps the parametric first stage for cross-fitted machine learning (**PLIV (IV)**), keeping the paper's *inherited* conditioning set — no data-driven control selection.
+
+![The hump-shaped IV effect (quadratic 2SLS); the linear-PLIV slope is a separate, non-comparable quantity.](forest_plot.png)
+
+The displayed learners are Forest and Lasso — both the linearized PLIV, reported as exploratory (not comparable to the quadratic hump). Full numbers are in the results table below.
+
+## Results — original vs. RECAST, side by side
+
+Every estimate together: the original published number, our replication/extension, and the published benchmark where one exists. The estimator never saw the benchmark — it is compared only after the results were frozen.
 
 
 **IV replication (quadratic 2SLS)**
@@ -69,6 +83,8 @@ Original result, our replication/extension, the published benchmark (where one e
 | PLIV-Forest | NOT COMPARABLE (hump, not a linear slope) | 7.387 (se 6.188, p=0.233) | none | functional-form-limited (linear PLIV cannot represent the hump) |
 | PLIV-Lasso | NOT COMPARABLE (hump, not a linear slope) | 9.175 (se 4.394, p=0.037) | none | functional-form-limited (linear PLIV cannot represent the hump) |
 
+*Verdict counts:* PARTIAL 1, SUCCESS 1, exact 1, functional-form-limited (linear PLIV cannot represent the hump) 2.
+
 ::: {.callout-warning}
 ## Functional-form limitation
 original treatment enters NONLINEARLY (functional_form=quadratic); single-treatment linear PLIV cannot represent it. The DML extension is a LINEARIZED exploratory IV slope only — it does NOT recover the original curvature/turning point. Reproduce the nonlinear structure in the replication stage; treat the PLIV number as a functional-form-limited robustness check, not a replacement estimand.
@@ -81,18 +97,13 @@ No revisit-paper benchmark. Replication compares to the original published quadr
 :::
 
 
-## Causal-ML extension
+## Heterogeneity — does the effect vary?
 
-![The hump-shaped IV effect (quadratic 2SLS); the linear-PLIV slope is a separate, non-comparable quantity.](forest_plot.png)
-
-Per-learner numbers are in the gap table above. 
-The displayed learners are Forest and Lasso; both are the linearized PLIV, reported as exploratory.
-
-## Heterogeneity (GATE / CATE)
+Pre-declared subgroup effects via the standard DoubleML `gate()`/`cate()` (or group-time ATTs for DiD). Exploratory unless a benchmark exists; moderators are fixed in advance (no moderator shopping).
 
 _No revisit-paper benchmark for Ashraf-Galor; the comparison is to the original published quadratic 2SLS. Heterogeneity not in scope._
 
-## What causal ML added
+## The bottom line — what causal ML added
 
 The replication is essentially perfect: the hump-shaped 2SLS coefficients reproduce and the implied optimal diversity (0.690) matches the published value exactly, even with a generated instrument and only 21 countries. The extension is where honesty matters: the estimand router sends IV to a linear PLIV, but a single linear slope cannot represent a hump — so RECAST runs the PLIV, labels it a *linearized exploratory* quantity that is not comparable to the quadratic coefficients, and declines to present it as 'the effect of diversity.' The pipeline recognizing the boundary of its own tool is the point.
 
@@ -116,7 +127,7 @@ The extension was reviewed over **1 round** by two isolated referees (general + 
 
 :::
 
-## Downloads & reproducibility
+## Reproduce it
 
 - Note: executed via a bespoke `run_ag.py` script (the generated-instrument IV needed per-paper code), so there is no pipeline notebook for this paper; it also went through a single referee round.
 - Full result artifacts (gap table, frozen estimates, referee reports) live in the project's `data/results/` and `paper/review_history/`.

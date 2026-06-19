@@ -49,6 +49,17 @@ html { overflow-x: hidden; }
   padding: 1rem 1.4rem; margin: 1.5rem auto; max-width: 760px;
 }
 
+/* ── Paper-page "bottom line" lead box ───────────────────────────── */
+.summary-lead {
+  font-size: 1.12rem; line-height: 1.55; color: #2b3a47;
+  background: #f4f8fc; border: 1px solid #dbe6f0; border-left: 4px solid $primary;
+  border-radius: 0 8px 8px 0; padding: 1.1rem 1.35rem; margin: 0.5rem 0 1.4rem;
+}
+.summary-lead .verdict {
+  display: block; margin-top: 0.7rem; font-size: 0.98rem; color: #1f3346;
+}
+.summary-lead .verdict strong { color: $primary; }
+
 /* ── Pipeline steps ───────────────────────────────────────────────── */
 .pipeline-steps {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));

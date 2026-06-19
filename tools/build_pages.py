@@ -178,8 +178,11 @@ def esc(s):
 
 
 def render_gap_table(gap):
-    """Generic renderer for all four gap_table shapes."""
-    rows = gap.get("rows", [])
+    """Generic renderer for all four gap_table shapes. Heterogeneity rows are
+    dropped here — they have their own dedicated GATE/CATE section now."""
+    rows = [r for r in gap.get("rows", [])
+            if str(r.get("panel", "")).strip().lower() != "heterogeneity"
+            and "hte_results" not in str(r.get("ours", "")).lower()]
     out = []
     # group by panel, preserving order
     panels = []
@@ -218,8 +221,13 @@ def render_gap_table(gap):
                 v = f"**{v}**"
             cells.append(esc(v))
             out.append("| " + " | ".join(cells) + " |")
-    # verdict counts
-    vc = gap.get("verdict_counts")
+    # verdict counts — recomputed from the rows actually shown (so dropping the
+    # heterogeneity rows doesn't leave a stale "exploratory N" count)
+    vc = {}
+    for r in rows:
+        v = str(r.get("verdict", "")).strip()
+        if v:
+            vc[v] = vc.get(v, 0) + 1
     if vc:
         out.append("\n*Verdict counts:* " +
                    ", ".join(f"{k} {v}" for k, v in vc.items()) + ".")
@@ -441,67 +449,97 @@ def build(slug, meta):
         "---",
     ]
 
+    gate = rc.get("gate")
+    tier = rc.get("overall_tier")
+    rep_str = (f"{gate}" + (f" · {tier}" if tier else "")) if gate else "—"
+
     body = []
-    # 1. summary + glance
-    body.append("## Summary\n")
-    body.append(f"**Citation:** {citation(spec)}\n")
-    body.append(f"{meta['headline']}\n")
-    body.append("::: {.glance}")
-    for k, v in (("Method path", meta["method"]),
-                 ("Replication", meta["regime"]),
-                 ("Review verdict", meta.get("verdict", "Ready")),
-                 ("Identification", ident.get("type", "—"))):
-        body.append(f'<div class="g"><span class="k">{k}</span>'
-                    f'<span class="v">{v}</span></div>')
+    # 1. citation line + bottom-line lead + at-a-glance
+    cite = f"*{auth_disp}" + (f" ({year})" if year else "")
+    cite += (f" · {journal}" if journal else "")
+    cite += (f" · [doi:{doi}](https://doi.org/{doi})" if doi else "") + "*"
+    body.append(cite + "\n")
+
+    body.append("::: {.summary-lead}")
+    body.append(meta["headline"])
+    vbits = []
+    if gate:
+        vbits.append(f"replication **{gate}**" + (f" ({tier})" if tier else ""))
+    vbits.append("passed two-referee AI review" if tabs
+                 else "extension demonstration (not yet AI-reviewed)")
+    body.append(f"\n[**Bottom line** — {'; '.join(vbits)}.]{{.verdict}}")
     body.append(":::\n")
 
-    # 2. estimand
+    body.append("::: {.glance}")
+    for k, v in (("Field", meta["topic"]),
+                 ("Identification", ident.get("type", "—")),
+                 ("Causal-ML method", meta["method"]),
+                 ("Replication", rep_str)):
+        body.append(f'<div class="g"><span class="k">{k}</span>'
+                    f'<span class="v">{esc(v)}</span></div>')
+    body.append(":::\n")
+
+    # 2. the original paper
     if est_src.exists():
-        body.append("## Estimand & identification\n")
+        body.append("## The original paper & its claim\n")
+        body.append("What the paper estimates, the identification strategy RECAST "
+                    "inherits unchanged, and the exact estimand carried into the "
+                    "extension.\n")
         body.append("{{< include estimand_statement.md >}}\n")
 
-    # 3. replication
-    body.append("## Replication\n")
+    # 3. Step 1 — replicate
+    body.append("## Step 1 · Replicate the published result\n")
+    body.append("Before any machine learning, RECAST reproduces the paper's headline "
+                "coefficient(s) at the original standard-error convention. **A failed "
+                "replication halts the pipeline — no extension runs on a result we could "
+                "not reproduce.**\n")
     body.append(render_replication(rc) + "\n")
 
-    # 4. gap table
-    body.append("## The gap table\n")
-    body.append("Original result, our replication/extension, the published benchmark "
-                "(where one exists), and the verdict. The estimator never saw the "
-                "benchmark — it is compared only after the results were frozen.\n")
-    body.append(render_gap_table(gap) + "\n")
-
-    # 5. extension + figure
-    body.append("## Causal-ML extension\n")
+    # 4. Step 2 — extend with causal ML (figure)
+    body.append("## Step 2 · Extend with causal ML\n")
+    body.append(f"RECAST then swaps the parametric first stage for cross-fitted machine "
+                f"learning (**{meta['method']}**), keeping the paper's *inherited* "
+                f"conditioning set — no data-driven control selection.\n")
     if has_fig:
         cap = (meta.get("did_fig_cap")
                or ("The hump-shaped IV effect (quadratic 2SLS); the linear-PLIV slope is a "
                    "separate, non-comparable quantity." if slug == "ashraf_galor_2013"
                    else "Estimates and 95% intervals across learners (and OLS)."))
         body.append(f"![{cap}](forest_plot.png)\n")
-    body.append("Per-learner numbers are in the gap table above. ")
     if meta.get("did_fig_cap"):
-        body.append("All learners are the DML difference-in-differences estimator "
-                    "described above.\n")
+        body.append("All displayed learners are the DML difference-in-differences "
+                    "estimator; full per-learner numbers are in the results table below.\n")
     elif slug == "ashraf_galor_2013":
-        body.append("The displayed learners are Forest and Lasso; both are the "
-                    "linearized PLIV, reported as exploratory.\n")
+        body.append("The displayed learners are Forest and Lasso — both the linearized "
+                    "PLIV, reported as exploratory (not comparable to the quadratic hump). "
+                    "Full numbers are in the results table below.\n")
     elif slug == "teacher_training_2019":
         body.append("The displayed BLP learner is the neural-network proxy (the "
-                    "Λ-criterion best, matching the benchmark).\n")
+                    "Λ-criterion best, matching the benchmark). Full numbers below.\n")
     else:
-        body.append("The preferred display learner is *Best* (the lowest-nuisance-RMSE "
-                    "composition).\n")
+        body.append("The preferred display learner is *Best* (lowest nuisance RMSE); "
+                    "full per-learner numbers are in the results table below.\n")
 
-    # 5b. heterogeneity (GATE / CATE / group-time ATT) — uniform DoubleML HTE
-    body.append("## Heterogeneity (GATE / CATE)\n")
+    # 5. results — side by side
+    body.append("## Results — original vs. RECAST, side by side\n")
+    body.append("Every estimate together: the original published number, our "
+                "replication/extension, and the published benchmark where one exists. "
+                "The estimator never saw the benchmark — it is compared only after the "
+                "results were frozen.\n")
+    body.append(render_gap_table(gap) + "\n")
+
+    # 6. heterogeneity (GATE / CATE / group-time ATT)
+    body.append("## Heterogeneity — does the effect vary?\n")
+    body.append("Pre-declared subgroup effects via the standard DoubleML "
+                "`gate()`/`cate()` (or group-time ATTs for DiD). Exploratory unless a "
+                "benchmark exists; moderators are fixed in advance (no moderator shopping).\n")
     body.append(render_hte(hte) + "\n")
 
-    # 6. honest verdict
-    body.append("## What causal ML added\n")
+    # 7. honest verdict
+    body.append("## The bottom line — what causal ML added\n")
     body.append(meta["added"] + "\n")
 
-    # 7. referee tabset (only when the project went through AI review)
+    # 8. referee tabset (only when the project went through AI review)
     body.append("## AI peer review\n")
     if tabs:
         n_round2 = sum(1 for _, n in tabs if n.startswith("r2_"))
@@ -520,8 +558,8 @@ def build(slug, meta):
                     "difference-in-differences pathway; it has not yet been put through the "
                     "two-referee AI review (unlike the studies above).\n")
 
-    # 8. downloads
-    body.append("## Downloads & reproducibility\n")
+    # 9. downloads
+    body.append("## Reproduce it\n")
     dl = []
     if meta.get("walkthrough"):
         dl.append("- [Hand-built walkthrough notebook (.ipynb)]"

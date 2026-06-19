@@ -16,24 +16,30 @@ recast-path: "IRM + generic ML"
 replication-regime: "stochastic"
 ---
 
-## Summary
+*Loyalka, P., Popova, A., Li, G., Shi, Z. (2019) · American Economic Journal: Applied Economics*
 
-**Citation:** Loyalka, P., Popova, A., Li, G., Shi, Z. (2019). *Does Teacher Training Actually Work? Evidence from a Large-Scale Randomized Evaluation of a National Teacher Training Program*. *American Economic Journal: Applied Economics*.
-
+::: {.summary-lead}
 The null average effect, the CLAN sorting (9/10), and the GATES shape reproduce — but the BLP heterogeneity slope diverges from the benchmark (0.20 vs 0.65). Reported as implementation sensitivity, not a win.
 
-::: {.glance}
-<div class="g"><span class="k">Method path</span><span class="v">IRM + generic ML</span></div>
-<div class="g"><span class="k">Replication</span><span class="v">stochastic</span></div>
-<div class="g"><span class="k">Review verdict</span><span class="v">Ready</span></div>
-<div class="g"><span class="k">Identification</span><span class="v">OLS</span></div>
+[**Bottom line** — replication **PASS** (PARTIAL); passed two-referee AI review.]{.verdict}
 :::
 
-## Estimand & identification
+::: {.glance}
+<div class="g"><span class="k">Field</span><span class="v">Education (RCT)</span></div>
+<div class="g"><span class="k">Identification</span><span class="v">OLS</span></div>
+<div class="g"><span class="k">Causal-ML method</span><span class="v">IRM + generic ML</span></div>
+<div class="g"><span class="k">Replication</span><span class="v">PASS · PARTIAL</span></div>
+:::
+
+## The original paper & its claim
+
+What the paper estimates, the identification strategy RECAST inherits unchanged, and the exact estimand carried into the extension.
 
 {{< include estimand_statement.md >}}
 
-## Replication
+## Step 1 · Replicate the published result
+
+Before any machine learning, RECAST reproduces the paper's headline coefficient(s) at the original standard-error convention. **A failed replication halts the pipeline — no extension runs on a result we could not reproduce.**
 
 **Regime:** stochastic · **Gate:** PASS · **Overall tier:** PARTIAL
 
@@ -41,9 +47,17 @@ No deterministic published target is available, so replication is a documented *
 
 [original replication package not on disk; data is B&N's prepared analysis sample; replication regime is stochastic]{.text-muted-sm}
 
-## The gap table
+## Step 2 · Extend with causal ML
 
-Original result, our replication/extension, the published benchmark (where one exists), and the verdict. The estimator never saw the benchmark — it is compared only after the results were frozen.
+RECAST then swaps the parametric first stage for cross-fitted machine learning (**IRM + generic ML**), keeping the paper's *inherited* conditioning set — no data-driven control selection.
+
+![Estimates and 95% intervals across learners (and OLS).](forest_plot.png)
+
+The displayed BLP learner is the neural-network proxy (the Λ-criterion best, matching the benchmark). Full numbers below.
+
+## Results — original vs. RECAST, side by side
+
+Every estimate together: the original published number, our replication/extension, and the published benchmark where one exists. The estimator never saw the benchmark — it is compared only after the results were frozen.
 
 
 **ATE**
@@ -91,19 +105,14 @@ Original result, our replication/extension, the published benchmark (where one e
 
 [extension stage never saw benchmark_results.json; gap table computed by the orchestrator after dml_results.json was frozen (frozen `dml_results.json` sha256 `c6d1b7660c2c57be`)]{.text-muted-sm}
 
-## Causal-ML extension
+## Heterogeneity — does the effect vary?
 
-![Estimates and 95% intervals across learners (and OLS).](forest_plot.png)
-
-Per-learner numbers are in the gap table above. 
-The displayed BLP learner is the neural-network proxy (the Λ-criterion best, matching the benchmark).
-
-## Heterogeneity (GATE / CATE)
+Pre-declared subgroup effects via the standard DoubleML `gate()`/`cate()` (or group-time ATTs for DiD). Exploratory unless a benchmark exists; moderators are fixed in advance (no moderator shopping).
 
 Benchmarkable **generic-ML (CDDF 2018)** sorted-group analysis (BLP / GATES / CLAN) — the standard RCT heterogeneity.
 GATES (groups sorted by predicted effect), best learner *NeuralNet*: G1=-0.053 · G2=+0.033 · G3=+0.039 · G4=+0.043 · G5=+0.044
 
-## What causal ML added
+## The bottom line — what causal ML added
 
 This is the most informative result on the site because it is not clean. The average effect reproduces the known null, and the rank-dependent heterogeneity structure reproduces (which students/teachers sort to the tails: CLAN 9/10 directions, the GATES shape). But the *scale* of the heterogeneity — the headline BLP β₂ — is a third of the benchmark and statistically insignificant. A blocking referee finding (omitted randomization strata) was fixed and the run repeated; restoring the strata moved β₂ only from 0.178 to 0.200, which *eliminated* that explanation rather than closing the gap. RECAST reports this as genuine implementation sensitivity of generic-ML heterogeneity inference — not evidence against the benchmark, and certainly not a success it did not earn.
 
@@ -143,6 +152,6 @@ The extension was reviewed over **2 rounds** by two isolated referees (general +
 
 :::
 
-## Downloads & reproducibility
+## Reproduce it
 
 - Full result artifacts (gap table, frozen estimates, referee reports) live in the project's `data/results/` and `paper/review_history/`.
