@@ -424,6 +424,10 @@ def build(slug, meta):
     has_fig = fig.exists()
     if has_fig:
         shutil.copyfile(fig, dest / "forest_plot.png")
+    hte_fig = proj / "paper" / "figures" / "hte_forest.png"
+    has_hte_fig = hte_fig.exists()
+    if has_hte_fig:
+        shutil.copyfile(hte_fig, dest / "hte_forest.png")
     # estimand statement (strip its leading H1 to avoid a duplicate heading)
     est_src = proj / "data" / "estimand_statement.md"
     if est_src.exists():
@@ -548,11 +552,15 @@ def build(slug, meta):
                 "results were frozen.\n")
     body.append(render_gap_table(gap) + "\n")
 
-    # 6. heterogeneity (GATE / CATE / group-time ATT)
+    # 6. heterogeneity (GATE / CATE / group-time ATT) — forest plot + text
     body.append("## Heterogeneity — does the effect vary?\n")
     body.append("Pre-declared subgroup effects via the standard DoubleML "
                 "`gate()`/`cate()` (or group-time ATTs for DiD). Exploratory unless a "
                 "benchmark exists; moderators are fixed in advance (no moderator shopping).\n")
+    if has_hte_fig:
+        body.append("![Subgroup treatment effects with confidence intervals — a filled "
+                    "marker means the interval excludes zero, an open marker means it "
+                    "overlaps zero (exploratory).](hte_forest.png)\n")
     body.append(render_hte(hte) + "\n")
 
     # 7. honest verdict
