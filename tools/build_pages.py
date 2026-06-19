@@ -22,8 +22,13 @@ PROJECTS = ROOT / "phase2" / "projects"
 # ── per-paper editorial content (the part a human supplies) ──────────────────
 PAPERS = {
     "nunn_trefler_2010": {
-        "method": "PLR", "topic": "Trade & Growth", "regime": "deterministic",
+        "method": "PLR", "topic": "Trade & growth", "regime": "deterministic",
         "desc": "OLS cross-country growth on the skill bias of initial tariffs",
+        "plain": "Did countries whose early import tariffs leaned toward skill-intensive "
+        "goods go on to grow faster? The original study finds a positive association; "
+        "re-running it with flexible machine-learning controls roughly halves that link "
+        "and it mostly loses statistical significance — in line with the authors' own "
+        "caution that tariff choices were not random.",
         "headline": "DML roughly halves the OLS skill-bias/growth effect and drops "
         "5% significance for most learners; the automated pipeline reproduced the "
         "hand-built analysis bit-for-bit and matched the benchmark 21/21.",
@@ -40,8 +45,12 @@ PAPERS = {
         "walkthrough": True,
     },
     "teacher_training_2019": {
-        "method": "IRM + generic ML", "topic": "Education (RCT)", "regime": "stochastic",
+        "method": "IRM + generic ML", "topic": "Economics of education", "regime": "stochastic",
         "desc": "binary RCT of a teacher professional-development program",
+        "plain": "Does a teacher-training program raise student test scores? The "
+        "randomized trial found essentially no average effect — and RECAST reproduces "
+        "that null — while a machine-learning search for which students gain most turns "
+        "up only suggestive, not statistically firm, patterns.",
         "headline": "The null average effect, the CLAN sorting (9/10), and the GATES "
         "shape reproduce — but the BLP heterogeneity slope diverges from the benchmark "
         "(0.20 vs 0.65). Reported as implementation sensitivity, not a win.",
@@ -58,8 +67,13 @@ PAPERS = {
         "did not earn.",
     },
     "ashraf_galor_2013": {
-        "method": "PLIV (IV)", "topic": "Deep roots & Growth", "regime": "deterministic",
+        "method": "PLIV (IV)", "topic": "Growth & development", "regime": "deterministic",
         "desc": "quadratic IV of genetic diversity on long-run development",
+        "plain": "Is there a 'sweet spot' of population diversity for long-run prosperity, "
+        "with too little or too much both holding a country back? The original finds "
+        "exactly such a hump-shaped pattern and RECAST reproduces it precisely; the "
+        "machine-learning version can only fit a straight line, so it is reported as a "
+        "limited cross-check rather than the effect itself.",
         "headline": "The quadratic IV hump replicates exactly (optimal-diversity turning "
         "point 0.690); a linear PLIV cannot represent a hump, so the extension is labeled "
         "functional-form-limited rather than passed off as the effect.",
@@ -76,8 +90,12 @@ PAPERS = {
         "also went through a single referee round.",
     },
     "djankov_taxes_2010": {
-        "method": "PLR", "topic": "Public Finance", "regime": "deterministic",
+        "method": "PLR", "topic": "Public economics", "regime": "deterministic",
         "desc": "corporate-tax effects on investment under all-controls OLS",
+        "plain": "Do higher corporate taxes dampen business investment? The original "
+        "finds they do, and RECAST reproduces it; the effect stays negative under "
+        "flexible machine learning, though it shifts modestly depending on which control "
+        "variables are included.",
         "headline": "The all-12-controls OLS replicates 3/3 exactly and the DML port is "
         "17/21 consistent with the benchmark; a control-discipline screen flags 6 of 12 "
         "controls and discloses the resulting sensitivity (−0.200 → −0.230).",
@@ -94,51 +112,45 @@ PAPERS = {
         "either number is the 'true' effect.",
     },
     "trust_fintech_2025": {
-        "method": "DID_PLR", "topic": "Finance (DiD)", "regime": "PARTIAL ✓ (Table 5, open access)",
+        "method": "DID_PLR", "topic": "Finance", "regime": "PARTIAL ✓ (Table 5)",
         "desc": "continuous-intensity DiD: Wells-Fargo-scandal exposure × post on FinTech adoption",
         "verdict": "Ready",
-        "headline": "An OPEN-ACCESS paper (CC BY) whose published PDF ships in the package — so "
-        "the replication is benchmarked against the paper's PRINTED numbers, not a placeholder. "
-        "The county-level coefficient of interest is the triple interaction "
-        "exposure × post × NonRep (Table 5): published +0.080 (origination) / +0.082 "
-        "(application), reproduced here at +0.082 / +0.080 — within ~2%, with sign and 5% "
-        "significance preserved. Because the paper is in hand AND a published result was matched "
-        "within reasonable deviation, the blocking replication gate PASSES, so the extension may "
-        "run. The DML extension (DID_PLR) of the average-county double difference is 0.014–0.022 "
-        "across learners, all significant.",
-        "added": "This is the site's worked example of the blocking replication gate. RECAST "
-        "extends a paper ONLY after it has reproduced a PUBLISHED result within reasonable "
-        "deviation — otherwise it stops. Here the paper is open access (its PDF is in the "
-        "package), and its county-level Table 5 triple difference (exposure × post × NonRep, the "
-        "coefficient of interest) reproduces within ~2% with the NonRep × post coefficient "
-        "near-exact (−1.960 vs −1.966), so the gate is a documented PASS (PARTIAL: the package "
-        "ships data but not the .do that fixes the exact n, so n is documented, not gated; the "
-        "coefficient is robust across sample reconstructions, 0.080–0.090). Only then does the "
+        "plain": "After the 2016 Wells Fargo scandal shook trust in banks, did people lean "
+        "toward FinTech lenders instead? The original finds that counties hit harder by the "
+        "scandal saw bigger FinTech gains, and RECAST reproduces the published result and "
+        "shows it holds up under flexible machine-learning controls.",
+        "added": "This is the site's worked example of the blocking replication gate: RECAST "
+        "extends a paper only after reproducing a published result within reasonable deviation — "
+        "otherwise it stops. Here the county-level Table 5 triple difference (exposure × post × "
+        "NonRep, the coefficient of interest) reproduces within ~2% with the NonRep × post "
+        "coefficient near-exact (−1.960 vs −1.966), so the gate is a documented PASS (PARTIAL: "
+        "the replication sample is larger than the published one because the analysis code that "
+        "fixes the exact sample is not in the package, so n is documented rather than matched; "
+        "the coefficient is robust across reconstructions, 0.080–0.090). Only then does the "
         "extension run: the treatment is a continuous Wells-Fargo-exposure intensity × post — a "
-        "'dose' DiD, not binary staggered adoption — so the router sends the EXTENSION to "
+        "'dose' DiD, not binary staggered adoption — so the router sends the extension to "
         "DID_PLR (two-way within transform + DoubleML PLR on the interaction, clustered by "
         "county; the DML analogue of a two-way-FE DiD). The average-county effect survives and "
         "slightly strengthens under flexible ML control (0.019 → 0.014–0.022), conditioning only "
         "on the exogenous county covariates (the loan-characteristic shares are aggregated "
         "post-treatment outcomes — potential bad controls — so they are kept for the replication "
         "but dropped from the causal extension). The loan-level headline (Table 3, +0.035 → "
-        "'4.1% increase') is NOT replicable here (the 4.3 GB loan file is excluded); the "
-        "trust-mechanism (Gallup) tables use restricted pseudo data and are out of scope.",
+        "'4.1% increase') is not reproducible here because the 4.3 GB loan-level file is too "
+        "large to include; the trust-mechanism (Gallup) tables use restricted pseudo data and "
+        "are out of scope.",
         "did_fig_cap": "Continuous-intensity DiD: TWFE replication vs the DML (DID_PLR) extension across learners (95% CIs).",
         "downloads_note": "county panel range-extracted from the 1.4 GB Mendeley package "
         "(HMDA_FIPS.dta) without downloading the 4.3 GB loan-level file; built by the project's "
         "`build_project.py`.",
     },
     "divine_policy_2025": {
-        "method": "DID → DID_PLR", "topic": "Religion & Policy (DiD)", "regime": "stochastic",
+        "method": "DID → DID_PLR", "topic": "Empirical economics", "regime": "stochastic",
         "desc": "staggered binary DiD: faith-based-initiative adoption on the count of faith-based nonprofits",
         "verdict": "Ready",
-        "headline": "A staggered binary DiD on the paper's own outcome — the count of "
-        "faith-based nonprofits. DoubleMLDIDMulti (Callaway–Sant'Anna) is infeasible on a "
-        "50-state panel, so the pipeline gracefully falls back to the DML two-way-FE estimator "
-        "(loudly flagged). The effect is positive and significant — TWFE +0.038 (t=2.3); DML "
-        "+0.036–0.041, significant across all three learners — directionally consistent with "
-        "the paper's reported increase (+2,258 faith-based organizations).",
+        "plain": "When a US state launches a faith-based government initiative, do more "
+        "religious nonprofits spring up? The original finds they do, and RECAST reproduces "
+        "that increase and shows it survives re-estimation with flexible machine-learning "
+        "methods.",
         "added": "The design is the staggered adoption of state faith-based initiatives, so the "
         "router sends it to DoubleMLDIDMulti. But with only 50 states (6 never-treated, several "
         "single-state cohorts) the Callaway–Sant'Anna ML estimator hits empty per-(g,t) nuisance "
@@ -156,8 +168,8 @@ PAPERS = {
         "did_fig_cap": "Staggered DiD on the count of faith-based nonprofits: TWFE replication vs the DML extension (DoubleMLDIDMulti infeasible at 50 states → DID_PLR fallback) across learners (95% CIs).",
         "downloads_note": "state×year panel reconstructed in Python from the openICPSR raw files "
         "(Sager faith-based-law timing + the 14.4M-row NCCS nonprofit panel) by the project's "
-        "`build_project.py`; the manuscript IS in the package, but the headline GSS attitudes "
-        "outcome uses restricted microdata that is not.",
+        "`build_project.py`; the headline GSS attitudes outcome uses restricted microdata that "
+        "is not shipped.",
     },
 }
 
@@ -469,13 +481,13 @@ def build(slug, meta):
     body.append(cite + "\n")
 
     body.append("::: {.summary-lead}")
-    body.append(meta["headline"])
+    body.append(meta["plain"])
     vbits = []
     if gate:
         vbits.append(f"replication **{gate}**" + (f" ({tier})" if tier else ""))
     vbits.append("passed two-referee AI review" if tabs
                  else "extension demonstration (not yet AI-reviewed)")
-    body.append(f"\n[**Bottom line** — {'; '.join(vbits)}.]{{.verdict}}")
+    body.append(f"\n[**RECAST verdict** — {'; '.join(vbits)}.]{{.verdict}}")
     body.append(":::\n")
 
     body.append("::: {.glance}")

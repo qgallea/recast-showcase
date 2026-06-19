@@ -6,26 +6,26 @@ date-format: "YYYY"
 description: "continuous-intensity DiD: Wells-Fargo-scandal exposure × post on FinTech adoption"
 categories:
   - "DID_PLR"
-  - "Finance (DiD)"
+  - "Finance"
   - "2025"
   - "Ready"
 image: forest_plot.png
 paper-journal: "Journal of Financial Economics"
 paper-doi: "10.1016/j.jfineco.2025.104062"
 recast-path: "DID_PLR"
-replication-regime: "PARTIAL ✓ (Table 5, open access)"
+replication-regime: "PARTIAL ✓ (Table 5)"
 ---
 
 *Yang, K. (2025) · Journal of Financial Economics · [doi:10.1016/j.jfineco.2025.104062](https://doi.org/10.1016/j.jfineco.2025.104062)*
 
 ::: {.summary-lead}
-An OPEN-ACCESS paper (CC BY) whose published PDF ships in the package — so the replication is benchmarked against the paper's PRINTED numbers, not a placeholder. The county-level coefficient of interest is the triple interaction exposure × post × NonRep (Table 5): published +0.080 (origination) / +0.082 (application), reproduced here at +0.082 / +0.080 — within ~2%, with sign and 5% significance preserved. Because the paper is in hand AND a published result was matched within reasonable deviation, the blocking replication gate PASSES, so the extension may run. The DML extension (DID_PLR) of the average-county double difference is 0.014–0.022 across learners, all significant.
+After the 2016 Wells Fargo scandal shook trust in banks, did people lean toward FinTech lenders instead? The original finds that counties hit harder by the scandal saw bigger FinTech gains, and RECAST reproduces the published result and shows it holds up under flexible machine-learning controls.
 
-[**Bottom line** — replication **PASS** (PARTIAL); passed two-referee AI review.]{.verdict}
+[**RECAST verdict** — replication **PASS** (PARTIAL); passed two-referee AI review.]{.verdict}
 :::
 
 ::: {.glance}
-<div class="g"><span class="k">Field</span><span class="v">Finance (DiD)</span></div>
+<div class="g"><span class="k">Field</span><span class="v">Finance</span></div>
 <div class="g"><span class="k">Identification</span><span class="v">DID</span></div>
 <div class="g"><span class="k">Causal-ML method</span><span class="v">DID_PLR</span></div>
 <div class="g"><span class="k">Replication</span><span class="v">PASS · PARTIAL</span></div>
@@ -70,19 +70,19 @@ Every estimate together: the original published number, our replication/extensio
 
 | Estimator | Original | Ours | Benchmark | Verdict |
 |---|---|---|---|---|
-| TWFE triple-diff (paper spec) | +0.080 (t 2.4, n 7335) | +0.0816 (t +2.10, n 8174) | published (open access) | consistent |
+| TWFE triple-diff (paper spec) | +0.080 (t 2.4, n 7335) | +0.0816 (t +2.10, n 8174) | published | consistent |
 
 **Replication: Table 5 col 1 (origination) :: NonRep x post (gamma2)**
 
 | Estimator | Original | Ours | Benchmark | Verdict |
 |---|---|---|---|---|
-| TWFE triple-diff (paper spec) | -1.966 (t 3.7, n 7335) | -1.9604 (t -3.52, n 8174) | published (open access) | consistent |
+| TWFE triple-diff (paper spec) | -1.966 (t 3.7, n 7335) | -1.9604 (t -3.52, n 8174) | published | consistent |
 
 **Replication: Table 5 col 4 (application) :: exposure x post x NonRep (triple)**
 
 | Estimator | Original | Ours | Benchmark | Verdict |
 |---|---|---|---|---|
-| TWFE triple-diff (paper spec) | +0.082 (t 2.2, n 7335) | +0.0803 (t +2.25, n 8174) | published (open access) | consistent |
+| TWFE triple-diff (paper spec) | +0.082 (t 2.2, n 7335) | +0.0803 (t +2.25, n 8174) | published | consistent |
 
 **DML extension (DID_PLR: two-way FE + PLR on exposure x post)**
 
@@ -97,7 +97,7 @@ Every estimate together: the original published number, our replication/extensio
 
 ::: {.callout-warning}
 ## Note
-Open-access paper: the county-level coefficient of interest (Table 5 triple interaction exposure x post x NonRep) is reproduced within ~2% (PARTIAL; n differs because the sample-defining .do is not shipped; the origination-triple t-stat attenuates from 2.4 to 2.10 -- still significant at 5%). The DML extension (DID_PLR) absorbs county+year FE and partials out the exogenous county covariates with ML, then a PLR on the exposure x post double difference: the average-county effect survives and stays positive/significant. The loan-level headline (Table 3, +0.035) is not replicable (4.3GB loan file excluded); Gallup trust tables use pseudo data.
+The county-level coefficient of interest (Table 5 triple interaction exposure x post x NonRep) is reproduced within ~2% (PARTIAL; n differs because the sample-defining .do is not shipped; the origination-triple t-stat attenuates from 2.4 to 2.10 -- still significant at 5%). The DML extension (DID_PLR) absorbs county+year FE and partials out the exogenous county covariates with ML, then a PLR on the exposure x post double difference: the average-county effect survives and stays positive/significant. The loan-level headline (Table 3, +0.035) is not replicable (4.3GB loan file excluded); Gallup trust tables use pseudo data.
 :::
 
 
@@ -113,7 +113,7 @@ DoubleML `DID_PLR.gate()`/`.cate()` over the pre-declared moderator(s) *NonRep* 
 
 ## The bottom line — what causal ML added
 
-This is the site's worked example of the blocking replication gate. RECAST extends a paper ONLY after it has reproduced a PUBLISHED result within reasonable deviation — otherwise it stops. Here the paper is open access (its PDF is in the package), and its county-level Table 5 triple difference (exposure × post × NonRep, the coefficient of interest) reproduces within ~2% with the NonRep × post coefficient near-exact (−1.960 vs −1.966), so the gate is a documented PASS (PARTIAL: the package ships data but not the .do that fixes the exact n, so n is documented, not gated; the coefficient is robust across sample reconstructions, 0.080–0.090). Only then does the extension run: the treatment is a continuous Wells-Fargo-exposure intensity × post — a 'dose' DiD, not binary staggered adoption — so the router sends the EXTENSION to DID_PLR (two-way within transform + DoubleML PLR on the interaction, clustered by county; the DML analogue of a two-way-FE DiD). The average-county effect survives and slightly strengthens under flexible ML control (0.019 → 0.014–0.022), conditioning only on the exogenous county covariates (the loan-characteristic shares are aggregated post-treatment outcomes — potential bad controls — so they are kept for the replication but dropped from the causal extension). The loan-level headline (Table 3, +0.035 → '4.1% increase') is NOT replicable here (the 4.3 GB loan file is excluded); the trust-mechanism (Gallup) tables use restricted pseudo data and are out of scope.
+This is the site's worked example of the blocking replication gate: RECAST extends a paper only after reproducing a published result within reasonable deviation — otherwise it stops. Here the county-level Table 5 triple difference (exposure × post × NonRep, the coefficient of interest) reproduces within ~2% with the NonRep × post coefficient near-exact (−1.960 vs −1.966), so the gate is a documented PASS (PARTIAL: the replication sample is larger than the published one because the analysis code that fixes the exact sample is not in the package, so n is documented rather than matched; the coefficient is robust across reconstructions, 0.080–0.090). Only then does the extension run: the treatment is a continuous Wells-Fargo-exposure intensity × post — a 'dose' DiD, not binary staggered adoption — so the router sends the extension to DID_PLR (two-way within transform + DoubleML PLR on the interaction, clustered by county; the DML analogue of a two-way-FE DiD). The average-county effect survives and slightly strengthens under flexible ML control (0.019 → 0.014–0.022), conditioning only on the exogenous county covariates (the loan-characteristic shares are aggregated post-treatment outcomes — potential bad controls — so they are kept for the replication but dropped from the causal extension). The loan-level headline (Table 3, +0.035 → '4.1% increase') is not reproducible here because the 4.3 GB loan-level file is too large to include; the trust-mechanism (Gallup) tables use restricted pseudo data and are out of scope.
 
 ## AI peer review
 

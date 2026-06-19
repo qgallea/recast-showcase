@@ -102,8 +102,8 @@ halts and writes a status, never an estimate:
   verify against (the relevant table/code isn't in the package, or only
   restricted/pseudo data shipped). A replication that matches *nothing* is
   unverifiable, so it cannot license an extension. (This deliberately retires an
-  earlier escape hatch where "no target available / paywalled" was waved through
-  as a stochastic pass.)
+  earlier escape hatch where a paper with no published target to match was waved
+  through as a stochastic pass.)
 - **`FAIL`** — a published target existed but the replication missed it (sign
   flip, significance change, unexplained gap). A deliberate fault-injection test
   (a sign-flipped target) confirms stage 4 halts in seconds.

@@ -6,7 +6,7 @@ date-format: "YYYY"
 description: "quadratic IV of genetic diversity on long-run development"
 categories:
   - "PLIV (IV)"
-  - "Deep roots & Growth"
+  - "Growth & development"
   - "2013"
   - "Ready"
 image: forest_plot.png
@@ -19,13 +19,13 @@ replication-regime: "deterministic"
 *Ashraf, Quamrul, Galor, Oded (2013) · American Economic Review*
 
 ::: {.summary-lead}
-The quadratic IV hump replicates exactly (optimal-diversity turning point 0.690); a linear PLIV cannot represent a hump, so the extension is labeled functional-form-limited rather than passed off as the effect.
+Is there a 'sweet spot' of population diversity for long-run prosperity, with too little or too much both holding a country back? The original finds exactly such a hump-shaped pattern and RECAST reproduces it precisely; the machine-learning version can only fit a straight line, so it is reported as a limited cross-check rather than the effect itself.
 
-[**Bottom line** — replication **PASS** (PARTIAL); passed two-referee AI review.]{.verdict}
+[**RECAST verdict** — replication **PASS** (PARTIAL); passed two-referee AI review.]{.verdict}
 :::
 
 ::: {.glance}
-<div class="g"><span class="k">Field</span><span class="v">Deep roots & Growth</span></div>
+<div class="g"><span class="k">Field</span><span class="v">Growth & development</span></div>
 <div class="g"><span class="k">Identification</span><span class="v">IV</span></div>
 <div class="g"><span class="k">Causal-ML method</span><span class="v">PLIV (IV)</span></div>
 <div class="g"><span class="k">Replication</span><span class="v">PASS · PARTIAL</span></div>
